@@ -1,12 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DAO;
-
-
-
 import DTO.NhaCungCapDTO;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,10 +21,8 @@ public class NhaCungCapDAO {
                     NhaCungCapDTO  ncc = new NhaCungCapDTO();
                     ncc.setIDNhaCungCap(rs.getString("IDNhaCungCap"));
                     ncc.setTenNhaCungCap(rs.getString("TenNhaCungCap"));
-                    ncc.setGmail(rs.getString("Gmail"));
                     ncc.setSoDienThoai(rs.getString("SoDienThoai"));
                     ncc.setDiaChi(rs.getString("DiaChi"));
-                    ncc.setTrangThai(rs.getString("TrangThai"));
                     dsncc.add(ncc);
                 }
             }
@@ -45,10 +36,8 @@ public class NhaCungCapDAO {
             String qry ="INSERT INTO nhacungcap values(";
             qry = qry+"'"+ncc.getIDNhaCungCap()+"'";
             qry = qry+","+"'"+ncc.getTenNhaCungCap()+"'";
-            qry = qry+","+"'"+ncc.getGmail()+"'";
             qry = qry+","+"'"+ncc.getSoDienThoai()+"'";
             qry = qry+","+"'"+ncc.getDiaChi()+"'";
-            qry = qry+","+"'"+ncc.getTrangThai()+"'";
             qry = qry+")";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
@@ -64,7 +53,6 @@ public class NhaCungCapDAO {
              String qry="Update nhacungcap Set ";
                     qry = qry + "TenNhaCungCap=" + "'" + ncc.getTenNhaCungCap() + "'";
                     qry = qry + ",SoDienThoai=" + "'" + ncc.getSoDienThoai() + "'";
-                    qry = qry + ",Gmail=" + "'" + ncc.getGmail() + "'";
                     qry = qry + ",DiaChi=" + "'" + ncc.getDiaChi() + "'";                    
                     qry = qry + " " + "where IDNhaCungCap='" + ncc.getIDNhaCungCap() + "'";
                     connection.getStatement();
@@ -78,9 +66,8 @@ public class NhaCungCapDAO {
     
     public void xoa(String  IDNhaCungCap){
         try {
-            String qry = "Update nhacungcap Set ";
-            qry = qry + "TrangThai=" + "'" + "Ẩn" + "'";
-            qry = qry + " " + "where IDNhaCungCap='" + IDNhaCungCap + "'";
+            String qry = "DELETE FROM nhacungcap";
+            qry = qry + " " + "WHERE IDNhaCungCap = '" + IDNhaCungCap+ "'";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
             System.out.println(qry);
@@ -89,18 +76,7 @@ public class NhaCungCapDAO {
 
         }
     }
-    public void xoa(NhaCungCapDTO ncc) {
-        try {
-            String qry = "Update nhacungcap Set ";
-            qry = qry + "TrangThai=" + "'" + ncc.getTrangThai() + "'";
-            qry = qry + " " + "where IDNhaCungCap='" + ncc.getIDNhaCungCap() + "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            System.out.println(qry);
-            connection.closeConnect();
-        } catch (Exception e) {
-        }
-    }
+    
 }
 
 

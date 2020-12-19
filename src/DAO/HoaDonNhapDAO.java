@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DAO;
 
 import DTO.HoaDonNhapDTO;
@@ -11,10 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Phat
- */
 public class HoaDonNhapDAO {
  
     ConnectDB connection = new ConnectDB();
@@ -28,9 +20,8 @@ public class HoaDonNhapDAO {
                     hdn.setIDHoaDonNhap(rs.getString("IDHoaDonNhap"));
                     hdn.setIDNhanVien(rs.getString("IDNhanVien"));
                     hdn.setIDNhaCungCap(rs.getString("IDNhaCungCap"));
-                    hdn.setTongTien(rs.getFloat("TongTien"));
+                    hdn.setThanhTien(rs.getFloat("ThanhTien"));
                     hdn.setNgayNhap(rs.getDate("NgayNhap").toLocalDate());
-                    hdn.setTrangThai(rs.getString("TrangThai"));
                     HDN.add(hdn);
                 }
             }
@@ -43,11 +34,10 @@ public class HoaDonNhapDAO {
         try{
             String qry ="INSERT INTO hoadonnhap values (";
             qry = qry + "'" + hdn.getIDHoaDonNhap()+ "'";
-            qry = qry + "," + "'" + hdn.getIDNhanVien()+ "'";
             qry = qry + "," + "'" + hdn.getIDNhaCungCap()+ "'";
+            qry = qry + "," + "'" + hdn.getIDNhanVien()+ "'";
+            qry = qry + "," + "'" + hdn.getThanhTien()+ "'";
             qry = qry + "," + "'" + hdn.getNgayNhap()+ "'";
-            qry = qry + "," + "'" + hdn.getTongTien()+ "'";
-            qry = qry + "," + "'" + hdn.getTrangThai()+ "'";
             qry = qry + ")";
             connection.getStatement();
             connection.ExecuteUpdate(qry);  
@@ -63,9 +53,9 @@ public class HoaDonNhapDAO {
              String qry="Update hoadonnhap Set ";
                     qry = qry + "IDNhanVien= '"+hdn.getIDNhanVien()+"'";
                     qry = qry + ",IDNhaCungCap= '"+hdn.getIDNhaCungCap()+"'";
-                    qry = qry + ",TongTien= '"+hdn.getTongTien()+"'";
+                    qry = qry + ",ThanhTien= '"+hdn.getThanhTien()+"'";
                     qry = qry + ",NgayNhap= '"+hdn.getNgayNhap()+"'";
-                    qry = qry + " "+" WHERE IDHoaDonNhap=' "+hdn.getIDHoaDonNhap()+"'";
+                    qry = qry + " "+" WHERE IDHoaDonNhap='"+hdn.getIDHoaDonNhap()+"'";
                     connection.getStatement();
                     connection.ExecuteUpdate(qry);
                     System.out.println(qry);
@@ -77,28 +67,14 @@ public class HoaDonNhapDAO {
     
     public void xoa(String  IDHoaDonNhap){
         try{
-           String qry = "Update hoadonnhap Set ";
-            qry = qry + "TrangThai=" + "'" + "Ẩn"+ "'";
-            qry = qry + " " + "where IDHoaDonNhap='" + IDHoaDonNhap+ "'";
+            String qry = "DELETE FROM hoadonnhap";
+            qry = qry + " " + "WHERE IDHoaDonNhap = '" + IDHoaDonNhap+ "'";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
             System.out.println(qry);
             connection.closeConnect();
         }catch(Exception ex){
             
-        }
-    }
-    
-    public void xoa(HoaDonNhapDTO hdn) {
-    try {
-            String qry = "Update hoadonnhap Set ";
-            qry = qry + "TrangThai=" + "'" + hdn.getTrangThai() + "'";
-            qry = qry + " " + "where IDHoaDonNhap='" + hdn.getIDHoaDonNhap()+ "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            System.out.println(qry);
-            connection.closeConnect();
-        } catch (Exception e) {
         }
     }
 

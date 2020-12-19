@@ -1,40 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package Excel;
 
-/**
- *
- * @author Piger Streaming
- */
-import BUS.CongThucBUS;
 import BUS.HoaDonBUS;
 import BUS.HoaDonNhapBUS;
 import BUS.KhachHangBUS;
-import BUS.KhuyenMaiBUS;
-import BUS.MonAnBUS;
-import BUS.NguyenLieuBUS;
+import BUS.LoaiDayBUS;
+import BUS.SanPhamBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
-import DTO.CongThucDTO;
+import BUS.ThuongHieuBUS;
 import DTO.HoaDonDTO;
 import DTO.HoaDonNhapDTO;
 import DTO.KhachHangDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.MonAnDTO;
-import DTO.NguyenLieuDTO;
+import DTO.LoaiDayDTO;
+import DTO.SanPhamDTO;
 import DTO.NhaCungCapDTO;
 import DTO.NhanVienDTO;
 import DTO.PhanQuyenDTO;
 import DTO.TaiKhoanDTO;
+import DTO.ThuongHieuDTO;
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Iterator;
@@ -62,9 +51,9 @@ public class DocExcel {
         return url;
     }
     
-    //Đọc file excel Món ăn
-    public void docFileExcelMonAn() {
-        fd.setTitle("Nhập dữ liệu món ăn từ excel"); //set Tiêu đề
+    //Đọc file excel sản phẩm
+    public void docFileExcelSanPham() {
+        fd.setTitle("Nhập dữ liệu sản phẩm từ excel"); //set Tiêu đề
         String url = getFile(); //tạo file
         if (url == null) {
             return;
@@ -90,41 +79,45 @@ public class DocExcel {
 
                 while (cellIterator.hasNext()) {
 //Tạo cell (ô) - giá trị, 
-                    String id = cellIterator.next().getStringCellValue(); 
-                    String tenmon = cellIterator.next().getStringCellValue();
-                    String donvitinh = cellIterator.next().getStringCellValue();
-                    int dongia = (int) cellIterator.next().getNumericCellValue();
+                    String idsp = cellIterator.next().getStringCellValue(); 
+                    String tensp = cellIterator.next().getStringCellValue();
+                    String idday = cellIterator.next().getStringCellValue();
+                    String idth = cellIterator.next().getStringCellValue();
+                    String idncc = cellIterator.next().getStringCellValue();
+                    String bh = cellIterator.next().getStringCellValue();
+                    int sl = (int) cellIterator.next().getNumericCellValue();
+                    float gia = (float) cellIterator.next().getNumericCellValue();
                     String hinhanh = cellIterator.next().getStringCellValue();
-                    String loai = cellIterator.next().getStringCellValue();
-                    int soluong = (int) cellIterator.next().getNumericCellValue();
 
-                    MonAnBUS monanBUS = new MonAnBUS();
-                    MonAnDTO monanOld = monanBUS.getMonAnDTO(id);
+                    SanPhamBUS sanphamBUS = new SanPhamBUS();
+                    SanPhamDTO sanphamOld = sanphamBUS.getSanPhamDTO(idsp);
 
-                    if (monanOld != null) {
+                    if (sanphamOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"", "Mã", "Tên Món", "Đơn vị tính", "Giá", "Hình ảnh", "Loại", "Số lượng" });
+                            mtb.setHeaders(new String[]{"", "Mã sản phẩm", "Tên sản phẩm", "Mã loại dây", "Mã thương hiệu", "Mã nhà cung cấp", "Bảo hành", "Số lượng", "Giá", "Hình ảnh" });
                             mtb.addRow(new String[]{
-                                "Cũ:", monanOld.getIDMonAn(),
-                                monanOld.getTenMonAn(),
-                                monanOld.getDonViTinh(),
-                                String.valueOf(monanOld.getDonGia()),
-                                monanOld.getHinhAnh(),
-                                monanOld.getLoai(),
-                                String.valueOf(monanOld.getSoLuong())
+                                "Cũ:", sanphamOld.getIDSanPham(),
+                                sanphamOld.getTenSanPham(),
+                                sanphamOld.getIDDay(),
+                                sanphamOld.getIDThuongHieu(),
+                                sanphamOld.getIDNhaCungCap(),
+                                sanphamOld.getBaoHanh(),
+                                String.valueOf(sanphamOld.getSoLuong()),
+                                String.valueOf(sanphamOld.getGia()),
+                                sanphamOld.getHinhAnh()
                             });
 
                             mtb.addRow(new String[]{
-                                "Mới:", id, tenmon, donvitinh, String.valueOf(dongia), hinhanh, loai, String.valueOf(soluong)                            
+                                "Mới:", idsp, tensp, idday, idth, idncc, bh, String.valueOf(sl), String.valueOf(gia), hinhanh                            
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            MonAnDTO DTO=new MonAnDTO(id, tenmon, donvitinh,dongia, hinhanh, loai, soluong, "Hiện");
-                            monanBUS.sua(DTO,MonAnBUS.timViTri(id));
+                            SanPhamDTO DTO=new SanPhamDTO(idsp, tensp, idday, idth, idncc, bh, sl, gia, hinhanh);
+                            sanphamBUS.sua(DTO,SanPhamBUS.timViTri(idsp));
                             countGhiDe++;
                         } else {
                             countBoQua++;
@@ -133,8 +126,8 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        MonAnDTO monan = new MonAnDTO(id, tenmon, donvitinh, dongia, hinhanh, loai, soluong, "Hiện");
-                        monanBUS.them(monan);
+                        SanPhamDTO sanpham = new SanPhamDTO(idsp, tensp, idday, idth, idncc, bh, sl, gia, hinhanh);
+                        sanphamBUS.them(sanpham);
                         countThem++;
                     }
                 }
@@ -159,9 +152,9 @@ public class DocExcel {
         }
     }
     
-     //Đọc file excel Nguyên liệu
-    public void docFileExcelNguyenLieu() {
-        fd.setTitle("Nhập dữ liệu nguyên liệu từ excel");
+     //Đọc file excel loại dây
+    public void docFileExcelLoaiDay() {
+        fd.setTitle("Nhập dữ liệu loại dây từ excel");
         String url = getFile();
         if (url == null) {
             return;
@@ -186,40 +179,30 @@ public class DocExcel {
                 Iterator<Cell> cellIterator = row.cellIterator();
 
                 while (cellIterator.hasNext()) {
-                    String id = cellIterator.next().getStringCellValue();
-                    String tennguyenlieu = cellIterator.next().getStringCellValue();
-                    int dongia = (int) cellIterator.next().getNumericCellValue();
-                    String hinhanh = cellIterator.next().getStringCellValue();
-                    String loai = cellIterator.next().getStringCellValue();
-                    String donvitinh = cellIterator.next().getStringCellValue();
-                    int soluong = (int) cellIterator.next().getNumericCellValue();
+                    String idld = cellIterator.next().getStringCellValue();
+                    String tenld = cellIterator.next().getStringCellValue();
 
-                    NguyenLieuBUS nguyenlieuBUS = new NguyenLieuBUS();
-                    NguyenLieuDTO nguyenlieuOld = nguyenlieuBUS.getNguyenLieuDTO(id);
+                    LoaiDayBUS loaidayBUS = new LoaiDayBUS();
+                    LoaiDayDTO loaidayOld = loaidayBUS.getLoaiDayDTO(idld);
 
-                    if (nguyenlieuOld != null) {
+                    if (loaidayOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"","Mã", "Tên", "Đơn vị tính", "Đơn giá", "Hình ảnh", "Loại", "Số lượng"});
+                            mtb.setHeaders(new String[]{"","Mã loại dây", "Tên loại dây"});
                             mtb.addRow(new String[]{
-                                "Cũ:", nguyenlieuOld.getIDNguyenLieu(),
-                                nguyenlieuOld.getTenNguyenLieu(),
-                                nguyenlieuOld.getDonViTinh(),
-                                String.valueOf(nguyenlieuOld.getDonGia()),
-                                nguyenlieuOld.getHinhAnh(),
-                                nguyenlieuOld.getLoai(),
-                                String.valueOf(nguyenlieuOld.getSoLuong())
-                            });
+                                "Cũ:", loaidayOld.getIDLoaiDay(),
+                                loaidayOld.getTenLoaiDay()
+                              });
                             mtb.addRow(new String[]{
-                                "Mới:", id, tennguyenlieu, donvitinh, String.valueOf(dongia), hinhanh, loai, String.valueOf(soluong)                            
+                                "Mới:", idld, tenld                       
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            NguyenLieuDTO DTO=new NguyenLieuDTO(id, tennguyenlieu, donvitinh, dongia, hinhanh, loai, soluong, "Hiện");
-                            nguyenlieuBUS.sua(DTO,NguyenLieuBUS.timViTri(id));
+                            LoaiDayDTO DTO=new LoaiDayDTO(idld, tenld);
+                            loaidayBUS.sua(DTO,LoaiDayBUS.timViTri(idld));
                             countGhiDe++;
                         } else {
                             countBoQua++;
@@ -228,8 +211,8 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        NguyenLieuDTO nguyenlieu = new NguyenLieuDTO(id, tennguyenlieu, donvitinh, dongia, hinhanh, loai, soluong, "Hiện");
-                        nguyenlieuBUS.them(nguyenlieu);
+                        LoaiDayDTO loaiday = new LoaiDayDTO(idld, tenld);
+                        loaidayBUS.them(loaiday);
                         countThem++;
                     }
                 }
@@ -254,8 +237,8 @@ public class DocExcel {
         }
     }
      //Đọc file excel Công thức
-    public void docFileExcelCongThuc() {
-        fd.setTitle("Nhập dữ liệu công thức từ excel");
+    public void docFileExcelThuongHieu() {
+        fd.setTitle("Nhập dữ liệu thương hiệu từ excel");
         String url = getFile();
         if (url == null) {
             return;
@@ -280,34 +263,32 @@ public class DocExcel {
                 Iterator<Cell> cellIterator = row.cellIterator();
 
                 while (cellIterator.hasNext()) {
-                    String id = cellIterator.next().getStringCellValue();
-                    String idmonan = cellIterator.next().getStringCellValue();
-                    String mota = cellIterator.next().getStringCellValue();
+                    String idth = cellIterator.next().getStringCellValue();
+                    String tenth = cellIterator.next().getStringCellValue();
                     
                     
-                    CongThucBUS congthucBUS = new CongThucBUS();
-                    CongThucDTO congthucOld = congthucBUS.getCongThucDTO(id);
+                    ThuongHieuBUS thuonghieuBUS = new ThuongHieuBUS();
+                    ThuongHieuDTO thuonghieuOld = thuonghieuBUS.getThuongHieuDTO(idth);
 
-                    if (congthucOld != null) {
+                    if (thuonghieuOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"", "Mã công thức", "Mã món ăn", "Mô tả" });
+                            mtb.setHeaders(new String[]{"", "Mã thương hiệu", "Tên thương hiệu"});
                             mtb.addRow(new String[]{
-                                "Cũ:", congthucOld.getIDCongThuc(),
-                                congthucOld.getIDMonAn(),
-                                congthucOld.getMoTaCongThuc(),
+                                "Cũ:", thuonghieuOld.getIDThuongHieu(),
+                                thuonghieuOld.getTenThuongHieu()
                                 
                             });
                             mtb.addRow(new String[]{
-                                "Mới:", id, idmonan, mota                            
+                                "Mới:", idth, tenth                     
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            CongThucDTO DTO=new CongThucDTO(id, idmonan, mota, "Hiện");
-                            congthucBUS.sua(DTO,CongThucBUS.timViTri(id));
+                            ThuongHieuDTO DTO=new ThuongHieuDTO(idth, tenth);
+                            thuonghieuBUS.sua(DTO,ThuongHieuBUS.timViTri(idth));
 
                             countGhiDe++;
                         } else {
@@ -317,8 +298,8 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        CongThucDTO ct = new CongThucDTO(id, idmonan, mota, "Hiện");
-                        congthucBUS.them(ct);
+                        ThuongHieuDTO ct = new ThuongHieuDTO(idth, tenth);
+                        thuonghieuBUS.them(ct);
                         countThem++;
                     }
                 }
@@ -370,40 +351,38 @@ public class DocExcel {
                 Iterator<Cell> cellIterator = row.cellIterator();
 
                 while (cellIterator.hasNext()) {
-                    String id = cellIterator.next().getStringCellValue();
+                    String idhd = cellIterator.next().getStringCellValue();
                     String idnv = cellIterator.next().getStringCellValue(); // cần tách chuỗi
                     String idkh = cellIterator.next().getStringCellValue(); // cần tách chuỗi
-                    String idkm = cellIterator.next().getStringCellValue(); // cần tách chuỗi
-                    LocalDate ngaylap = LocalDate.parse(cellIterator.next().getStringCellValue());
-                    int tiengiam = (int) cellIterator.next().getNumericCellValue();
-                    int tongtien = (int) cellIterator.next().getNumericCellValue();
+                    String tt = cellIterator.next().getStringCellValue(); // cần tách chuỗi
+                    float tien = (float) cellIterator.next().getNumericCellValue();
+                    LocalDate ngayBan = LocalDate.parse(cellIterator.next().getStringCellValue());
 
                     HoaDonBUS hoadonBUS = new HoaDonBUS();
-                    HoaDonDTO hdOld = hoadonBUS.getHoaDonDTO(id);
+                    HoaDonDTO hdOld = hoadonBUS.getHoaDonDTO(idhd);
                    
                     if (hdOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"", "Mã hóa đơn", "Mã nhân viên", "Mã khách hàng", "Mã khuyến mãi", "Ngày lập", "Tiền giảm giá", " Tổng tiền" });
+                            mtb.setHeaders(new String[]{"", "Mã hóa đơn", "Mã nhân viên", "Mã khách hàng", "Trạng thái", "Thành tiền", "Ngày bán"});
                             mtb.addRow(new String[]{
                                 "Cũ:", hdOld.getIDHoaDon(),
                                 hdOld.getIDNhanVien(),
                                 hdOld.getIDKhachHang(),
-                                hdOld.getIDKhuyenMai(),
-                                String.valueOf(hdOld.getNgayLap()),
-                                String.valueOf(hdOld.getTienGiamGia()),
-                                String.valueOf(hdOld.getTongTien()),
+                                hdOld.getTrangThai(),
+                                String.valueOf(hdOld.getThanhTien()),
+                                String.valueOf(hdOld.getNgayBan())
                             });
                             mtb.addRow(new String[]{
-                                "Mới:", id, idnv, idkh, idkm, String.valueOf(ngaylap), String.valueOf(tiengiam), String.valueOf(tongtien)            
+                                "Mới:", idhd, idnv, idkh, tt, String.valueOf(tien), String.valueOf(ngayBan)           
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            HoaDonDTO DTO = new HoaDonDTO(id, idnv, idkh, idkm, ngaylap, tiengiam, tongtien, "Hiện");
-                            hoadonBUS.sua(DTO,HoaDonBUS.timViTri(id));
+                            HoaDonDTO DTO = new HoaDonDTO(idhd, idnv, idkh, tt, tien, ngayBan);
+                            hoadonBUS.sua(DTO,HoaDonBUS.timViTri(idhd));
                             countGhiDe++;
                         } else {
                             countBoQua++;
@@ -412,7 +391,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        HoaDonDTO hd = new HoaDonDTO(id, idnv, idkh, idkm, ngaylap, tiengiam, tongtien, "Hiện");
+                        HoaDonDTO hd = new HoaDonDTO(idhd, idnv, idkh, tt, tien, ngayBan);
                         hoadonBUS.them(hd);
                         countThem++;
                     }
@@ -465,36 +444,36 @@ public class DocExcel {
                 Iterator<Cell> cellIterator = row.cellIterator();
 
                 while (cellIterator.hasNext()) {
-                    String id = cellIterator.next().getStringCellValue();
+                    String idhdn = cellIterator.next().getStringCellValue();
                     String idnv = cellIterator.next().getStringCellValue(); // cần tách chuỗi
                     String idncc = cellIterator.next().getStringCellValue(); // cần tách chuỗi
-                    LocalDate ngaynhap = LocalDate.parse(cellIterator.next().getStringCellValue());
-                    int tongtien = (int) cellIterator.next().getNumericCellValue();
+                    float tien = (float) cellIterator.next().getNumericCellValue();
+                    LocalDate ngaynhap = LocalDate.parse(cellIterator.next().getStringCellValue());                  
 
                     HoaDonNhapBUS hdnBUS = new HoaDonNhapBUS();
-                    HoaDonNhapDTO hdnOld = hdnBUS.getHoaDonNhapDTO(id);
+                    HoaDonNhapDTO hdnOld = hdnBUS.getHoaDonNhapDTO(idhdn);
                    
                     if (hdnOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"", "Mã hóa đơn", "Mã nhân viên", "Mã nhà cung cấp", "Ngày nhập", " Tổng tiền" });
+                            mtb.setHeaders(new String[]{"", "Mã hóa đơn", "Mã nhân viên", "Mã nhà cung cấp", "Thành tiền", "Ngày nhập" });
                             mtb.addRow(new String[]{
                                 "Cũ:", hdnOld.getIDHoaDonNhap(),
                                 hdnOld.getIDNhanVien(),
                                 hdnOld.getIDNhaCungCap(),
+                                String.valueOf(hdnOld.getThanhTien()),
                                 String.valueOf(hdnOld.getNgayNhap()),
-                                String.valueOf(hdnOld.getTongTien()),
                             });
                             mtb.addRow(new String[]{
-                                "Mới:", id, idnv, idncc, String.valueOf(ngaynhap), String.valueOf(tongtien)            
+                                "Mới:", idhdn, idnv, idncc, String.valueOf(tien), String.valueOf(ngaynhap)            
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            HoaDonNhapDTO DTO = new HoaDonNhapDTO(id, idnv, idncc, ngaynhap, tongtien, "Hiện");
-                            hdnBUS.sua(DTO,HoaDonNhapBUS.timViTri(id));
+                            HoaDonNhapDTO DTO = new HoaDonNhapDTO(idhdn, idnv, idncc, tien, ngaynhap);
+                            hdnBUS.sua(DTO,HoaDonNhapBUS.timViTri(idhdn));
                             countGhiDe++;
                         } else {
                             countBoQua++;
@@ -503,7 +482,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        HoaDonNhapDTO hdn = new HoaDonNhapDTO(id, idnv, idncc, ngaynhap, tongtien, "Hiện");
+                        HoaDonNhapDTO hdn = new HoaDonNhapDTO(idhdn, idnv, idncc, tien, ngaynhap);
                         hdnBUS.them(hdn);
                         countThem++;
                     }
@@ -530,95 +509,95 @@ public class DocExcel {
     }
      //Đọc file excel Khuyến mãi
     public void docFileExcelKhuyenMai() {
-        fd.setTitle("Nhập dữ liệu khuyến mãi từ excel");
-        String url = getFile();
-        if (url == null) {
-            return;
-        }
-
-        FileInputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(new File(url));
-
-            HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
-            HSSFSheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
-            Row row1 = rowIterator.next();
-
-            String hanhDongKhiTrung = "";
-            int countThem = 0;
-            int countGhiDe = 0;
-            int countBoQua = 0;
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
-
-                while (cellIterator.hasNext()) {
-                    String id = cellIterator.next().getStringCellValue();
-                    String ten = cellIterator.next().getStringCellValue();
-                    int tiengiam = (int) cellIterator.next().getNumericCellValue();
-                    LocalDate ngaybd = LocalDate.parse(cellIterator.next().getStringCellValue());
-                    LocalDate ngaykt = LocalDate.parse(cellIterator.next().getStringCellValue());
-                    String noidung = cellIterator.next().getStringCellValue();
-
-                    KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
-                    KhuyenMaiDTO kmOld = khuyenmaiBUS.getKhuyenMaiDTO(id);
-                   
-                    if (kmOld != null) {
-                        if (!hanhDongKhiTrung.contains("tất cả")) {
-                            MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"Mã khuyến mãi", "Tên chương trình", "Tiền giảm", "Ngày bắt đầu", "Ngày kết thúc", "Nội dung" });
-                            mtb.addRow(new String[]{
-                                "Cũ:", kmOld.getIDKhuyenMai(),
-                                kmOld.getTenChuongTrinh(),
-                                String.valueOf(kmOld.getTienGiam()),
-                                String.valueOf(kmOld.getNgayBatDau()),
-                                String.valueOf(kmOld.getNgayKetThuc()),
-                                kmOld.getNoiDungGiamGia(),
-                            });
-                            mtb.addRow(new String[]{
-                                "Mới:", id, ten, String.valueOf(tiengiam), String.valueOf(ngaybd), String.valueOf(ngaykt), noidung               
-                            });
-
-                            MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
-                            hanhDongKhiTrung = mop.getAnswer();
-                        }
-                        if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            KhuyenMaiDTO DTO = new KhuyenMaiDTO(id, ten, tiengiam, ngaybd, ngaykt, noidung, "Hiện");
-                            khuyenmaiBUS.sua(DTO,KhuyenMaiBUS.timViTri(id));
-                            countGhiDe++;
-                        } else {
-                            countBoQua++;
-                        }                      
-                        
-                    //Khi database trống    
-                     
-                    } else {          
-                        KhuyenMaiDTO km = new KhuyenMaiDTO(id, ten, tiengiam, ngaybd, ngaykt, noidung, "Hiện");
-                        khuyenmaiBUS.them(km);
-                        countThem++;
-                    }
-                }
-            }
-            JOptionPane.showMessageDialog(null, "Đọc thành công, "
-                    + "Thêm " + countThem
-                    + "; Ghi đè " + countGhiDe
-                    + "; Bỏ qua " + countBoQua
-                    + ". Vui lòng làm mới để thấy kết quả");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-           
-            JOptionPane.showMessageDialog(null, "Lỗi khi nhập dữ liệu từ file: " + ex.getMessage());
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Lỗi khi đóng inputstream: " + ex.getMessage());
-            }
-        }
+//        fd.setTitle("Nhập dữ liệu khuyến mãi từ excel");
+//        String url = getFile();
+//        if (url == null) {
+//            return;
+//        }
+//
+//        FileInputStream inputStream = null;
+//        try {
+//            inputStream = new FileInputStream(new File(url));
+//
+//            HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
+//            HSSFSheet sheet = workbook.getSheetAt(0);
+//            Iterator<Row> rowIterator = sheet.iterator();
+//            Row row1 = rowIterator.next();
+//
+//            String hanhDongKhiTrung = "";
+//            int countThem = 0;
+//            int countGhiDe = 0;
+//            int countBoQua = 0;
+//
+//            while (rowIterator.hasNext()) {
+//                Row row = rowIterator.next();
+//                Iterator<Cell> cellIterator = row.cellIterator();
+//
+//                while (cellIterator.hasNext()) {
+//                    String id = cellIterator.next().getStringCellValue();
+//                    String ten = cellIterator.next().getStringCellValue();
+//                    int tiengiam = (int) cellIterator.next().getNumericCellValue();
+//                    LocalDate ngaybd = LocalDate.parse(cellIterator.next().getStringCellValue());
+//                    LocalDate ngaykt = LocalDate.parse(cellIterator.next().getStringCellValue());
+//                    String noidung = cellIterator.next().getStringCellValue();
+//
+//                    KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
+//                    KhuyenMaiDTO kmOld = khuyenmaiBUS.getKhuyenMaiDTO(id);
+//                   
+//                    if (kmOld != null) {
+//                        if (!hanhDongKhiTrung.contains("tất cả")) {
+//                            MyTable mtb = new MyTable();
+//                            mtb.setHeaders(new String[]{"Mã khuyến mãi", "Tên chương trình", "Tiền giảm", "Ngày bắt đầu", "Ngày kết thúc", "Nội dung" });
+//                            mtb.addRow(new String[]{
+//                                "Cũ:", kmOld.getIDKhuyenMai(),
+//                                kmOld.getTenChuongTrinh(),
+//                                String.valueOf(kmOld.getTienGiam()),
+//                                String.valueOf(kmOld.getNgayBatDau()),
+//                                String.valueOf(kmOld.getNgayKetThuc()),
+//                                kmOld.getNoiDungGiamGia(),
+//                            });
+//                            mtb.addRow(new String[]{
+//                                "Mới:", id, ten, String.valueOf(tiengiam), String.valueOf(ngaybd), String.valueOf(ngaykt), noidung               
+//                            });
+//
+//                            MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
+//                            hanhDongKhiTrung = mop.getAnswer();
+//                        }
+//                        if (hanhDongKhiTrung.contains("Ghi đè")) {
+//                            KhuyenMaiDTO DTO = new KhuyenMaiDTO(id, ten, tiengiam, ngaybd, ngaykt, noidung, "Hiện");
+//                            khuyenmaiBUS.sua(DTO,KhuyenMaiBUS.timViTri(id));
+//                            countGhiDe++;
+//                        } else {
+//                            countBoQua++;
+//                        }                      
+//                        
+//                    //Khi database trống    
+//                     
+//                    } else {          
+//                        KhuyenMaiDTO km = new KhuyenMaiDTO(id, ten, tiengiam, ngaybd, ngaykt, noidung, "Hiện");
+//                        khuyenmaiBUS.them(km);
+//                        countThem++;
+//                    }
+//                }
+//            }
+//            JOptionPane.showMessageDialog(null, "Đọc thành công, "
+//                    + "Thêm " + countThem
+//                    + "; Ghi đè " + countGhiDe
+//                    + "; Bỏ qua " + countBoQua
+//                    + ". Vui lòng làm mới để thấy kết quả");
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//           
+//            JOptionPane.showMessageDialog(null, "Lỗi khi nhập dữ liệu từ file: " + ex.getMessage());
+//        } finally {
+//            try {
+//                if (inputStream != null) {
+//                    inputStream.close();
+//                }
+//            } catch (IOException ex) {
+//                JOptionPane.showMessageDialog(null, "Lỗi khi đóng inputstream: " + ex.getMessage());
+//            }
+//        }
     }
     
      //Đọc file excel Khách hàng
@@ -648,42 +627,40 @@ public class DocExcel {
                 Iterator<Cell> cellIterator = row.cellIterator();
 
                 while (cellIterator.hasNext()) {
-                    String id = cellIterator.next().getStringCellValue();
+                    String idkh = cellIterator.next().getStringCellValue();
                     String ho = cellIterator.next().getStringCellValue();
                     String ten = cellIterator.next().getStringCellValue();
-                    String gmail = cellIterator.next().getStringCellValue();
-                    String gioitinh = cellIterator.next().getStringCellValue();
+                    String diachi = cellIterator.next().getStringCellValue();
                     String sdt = cellIterator.next().getStringCellValue();
                     float tongchitieu = (float) cellIterator.next().getNumericCellValue();
 
                     KhachHangBUS khBUS = new KhachHangBUS();
-                    KhachHangDTO khOld = khBUS.getKhachHangDTO(id);
+                    KhachHangDTO khOld = khBUS.getKhachHangDTO(idkh);
 
                     
                     
                     if (khOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"", "Mã khách hàng", "Họ", "Tên", "Gmail", "Giới tính", "SĐT", "Tổng chi tiêu" });
+                            mtb.setHeaders(new String[]{"", "Mã khách hàng", "Họ", "Tên", "Địa chỉ", "SĐT", "Tổng chi tiêu" });
                             mtb.addRow(new String[]{
                                 "Cũ:", khOld.getIDKhachHang(),
                                 khOld.getHoKhachHang(),
                                 khOld.getTenKhachHang(),
-                                khOld.getGmail(),
-                                khOld.getGioiTinh(),
+                                khOld.getDiaChiNhanHang(),
                                 khOld.getSoDienThoai(),
                                 String.valueOf(khOld.getTongChiTieu())
                             });
                             mtb.addRow(new String[]{
-                                "Mới:", id, ho, ten, gmail, gioitinh, sdt, String.valueOf(tongchitieu)                   
+                                "Mới:", idkh, ho, ten, diachi, sdt, String.valueOf(tongchitieu)                   
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            KhachHangDTO DTO=new KhachHangDTO(id, ho, ten, gmail, gioitinh, sdt, tongchitieu, "Hiện");
-                            khBUS.sua(DTO,KhachHangBUS.timViTri(id));
+                            KhachHangDTO DTO=new KhachHangDTO(idkh, ho, ten, diachi, sdt, tongchitieu);
+                            khBUS.sua(DTO,KhachHangBUS.timViTri(idkh));
                             countGhiDe++;
                         } else {
                             countBoQua++;
@@ -692,7 +669,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        KhachHangDTO khaha = new KhachHangDTO(id, ho, ten, gmail, gioitinh, sdt, tongchitieu, "Hiện");
+                        KhachHangDTO khaha = new KhachHangDTO(idkh, ho, ten, diachi, sdt, tongchitieu);
                         khBUS.them(khaha);
                         countThem++;
                     }
@@ -777,8 +754,8 @@ public class DocExcel {
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            NhanVienDTO DTO=new NhanVienDTO(id, ho, ten, gmail, gioitinh, sdt, chucvu, "Hiện");
-                            nvBUS.sua(DTO,NguyenLieuBUS.timViTri(id));
+                            NhanVienDTO DTO=new NhanVienDTO(id, ho, ten, gmail, gioitinh, sdt, chucvu);
+                            nvBUS.sua(DTO,LoaiDayBUS.timViTri(id));
                             countGhiDe++;
                         } else {
                             countBoQua++;
@@ -787,7 +764,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        NhanVienDTO nhanvien = new NhanVienDTO(id, ho, ten, gmail, gioitinh, sdt, chucvu, "Hiện");
+                        NhanVienDTO nhanvien = new NhanVienDTO(id, ho, ten, gmail, gioitinh, sdt, chucvu);
                         nvBUS.them(nhanvien);
                         countThem++;
                     }
@@ -842,7 +819,6 @@ public class DocExcel {
                     String id = cellIterator.next().getStringCellValue();
                     String ten = cellIterator.next().getStringCellValue();
                     String sdt = cellIterator.next().getStringCellValue();
-                    String gmail = cellIterator.next().getStringCellValue();
                     String diachi = cellIterator.next().getStringCellValue();
 
                     NhaCungCapBUS nccBUS = new NhaCungCapBUS();
@@ -851,24 +827,23 @@ public class DocExcel {
                     if (nccOld != null) {
                         if (!hanhDongKhiTrung.contains("tất cả")) {
                             MyTable mtb = new MyTable();
-                            mtb.setHeaders(new String[]{"", "Mã nhà cung cấp", "Tên", "SĐT", "Gmail", "Địa chỉ" });
+                            mtb.setHeaders(new String[]{"", "Mã nhà cung cấp", "Tên", "SĐT", "Địa chỉ" });
                             mtb.addRow(new String[]{
                                 "Cũ:", nccOld.getIDNhaCungCap(),
                                 nccOld.getTenNhaCungCap(),
                                 nccOld.getSoDienThoai(),
-                                nccOld.getGmail(),
-                                nccOld.getDiaChi(),
+                                nccOld.getDiaChi()
                             });
                             
                             mtb.addRow(new String[]{
-                                "Mới:", id, ten, sdt, gmail, diachi                            
+                                "Mới:", id, ten, sdt, diachi                            
                             });
 
                             MyJOptionPane mop = new MyJOptionPane(mtb, hanhDongKhiTrung);
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            NhaCungCapDTO DTO=new NhaCungCapDTO(id, ten, sdt, gmail, diachi, "Hiện");
+                            NhaCungCapDTO DTO=new NhaCungCapDTO(id, ten, sdt, diachi);
                             nccBUS.sua(DTO,NhaCungCapBUS.timViTri(id));
                             countGhiDe++;
                         } else {
@@ -878,7 +853,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        NhaCungCapDTO nhacc = new NhaCungCapDTO(id, ten, sdt, gmail, diachi, "Hiện");
+                        NhaCungCapDTO nhacc = new NhaCungCapDTO(id, ten, sdt, diachi);
                         nccBUS.them(nhacc);
                         countThem++;
                     }
@@ -958,7 +933,7 @@ public class DocExcel {
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            TaiKhoanDTO DTO=new TaiKhoanDTO(id, idnv, idquyen, matkhau, "Hiện");
+                            TaiKhoanDTO DTO=new TaiKhoanDTO(id, idnv, idquyen, matkhau);
                             tkBUS.sua(DTO,TaiKhoanBUS.timViTri(id));
                             countGhiDe++;
                         } else {
@@ -968,7 +943,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        TaiKhoanDTO taka = new TaiKhoanDTO(id, idnv, idquyen, matkhau, "Hiện");
+                        TaiKhoanDTO taka = new TaiKhoanDTO(id, idnv, idquyen, matkhau);
                         tkBUS.them(taka);
                         countThem++;
                     }
@@ -1045,7 +1020,7 @@ public class DocExcel {
                             hanhDongKhiTrung = mop.getAnswer();
                         }
                         if (hanhDongKhiTrung.contains("Ghi đè")) {
-                            PhanQuyenDTO DTO=new PhanQuyenDTO(id, ten, mota, "Hiện");
+                            PhanQuyenDTO DTO=new PhanQuyenDTO(id, ten, mota);
                             pqBUS.sua(DTO,PhanQuyenBUS.timViTri(id));
                             countGhiDe++;
                         } else {
@@ -1055,7 +1030,7 @@ public class DocExcel {
                     //Khi database trống    
                      
                     } else {          
-                        PhanQuyenDTO phaqu = new PhanQuyenDTO(id, ten, mota, "Hiện");
+                        PhanQuyenDTO phaqu = new PhanQuyenDTO(id, ten, mota);
                         pqBUS.them(phaqu);
                         countThem++;
                     }

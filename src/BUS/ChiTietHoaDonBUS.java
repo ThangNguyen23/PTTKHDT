@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package BUS;
 
 
-import DTO.*;
-import DAO.*;
+import DTO.ChiTietHoaDonDTO;
+import DAO.ChiTietHoaDonDAO;
+import DTO.SanPhamDTO;
 import java.util.ArrayList;
 
 public class ChiTietHoaDonBUS {
@@ -15,7 +12,7 @@ public class ChiTietHoaDonBUS {
     public static ArrayList<ChiTietHoaDonDTO> cthd;
 
     public ChiTietHoaDonBUS() {
-
+            
     }
 
     public void docCTHD() throws Exception //cần ghi lại khi qua class khác
@@ -25,7 +22,7 @@ public class ChiTietHoaDonBUS {
             cthd = new ArrayList<>();
         }
         cthd = CTHD.docCTHD(); // đọc dữ liệu từ database
-
+        autosetDonGiavaThanhTien();
     }
 
     public void them(ChiTietHoaDonDTO ctHD) //cần ghi lại khi qua class khác
@@ -37,29 +34,15 @@ public class ChiTietHoaDonBUS {
         }
         
     }
-
-//    public void sua(ChiTietHoaDonDTO ctHD, int i) //cần ghi lại khi qua class khác
-//    {
-//        ChiTietHoaDonDAO CTHD = new ChiTietHoaDonDAO();
-//        CTHD.sua(ctHD);
-//        cthd.set(i, ctHD);
-//    }
-
-//    public void xoa(ChiTietHoaDonDTO ctHD, int index) //cần ghi lại khi qua class khác
-//    {
-//        ChiTietHoaDonDAO CTHD = new ChiTietHoaDonDAO();
-//        CTHD.xoa(ctHD); // update trạng thái lên database
-//        cthd.set(index, ctHD); // sửa lại thông tin trong list
-//    }
      public void trusoluong(ChiTietHoaDonDTO ctHD){
-         MonAnBUS bus=new MonAnBUS();
-         for(MonAnDTO DTO:MonAnBUS.dsMonAn)
+         SanPhamBUS bus=new SanPhamBUS();
+         for(SanPhamDTO DTO:SanPhamBUS.dsSanPham)
          {
-             if(ctHD.getIDMonAn().equals(DTO.getIDMonAn()))
+             if(ctHD.getIDSanPham().equals(DTO.getIDSanPham()))
              {
-                 int i=MonAnBUS.timViTri(DTO.getIDMonAn());
+                 int i=SanPhamBUS.timViTri(DTO.getIDSanPham());
                  DTO.setSoLuong(DTO.getSoLuong()-ctHD.getSoLuong());
-                 MonAnBUS.dsMonAn.set(i, DTO);
+                 SanPhamBUS.dsSanPham.set(i, DTO);
                  bus.sua(DTO, i);
                  return;
              }
@@ -90,20 +73,27 @@ public class ChiTietHoaDonBUS {
     }
     public ChiTietHoaDonDTO getChiTiet(String idHoaDon, String IDma) {
         for (ChiTietHoaDonDTO cthdDTO : cthd) {
-            if (cthdDTO.getIDHoaDon().equals(idHoaDon) && cthdDTO.getIDMonAn().equals(IDma) ) {
+            if (cthdDTO.getIDHoaDon().equals(idHoaDon) && cthdDTO.getIDSanPham().equals(IDma) ) {
                 return cthdDTO;
             }
         }
         return null;
     }
-
+    private void autosetDonGiavaThanhTien(){
+        for(int i=0;i<cthd.size();i++){
+            cthd.get(i).setDonGia(SanPhamBUS.dsSanPham.get(SanPhamBUS.timViTri(cthd.get(i).getIDSanPham())).getGia());
+        }
+        for(int i=0;i<cthd.size();i++){
+            cthd.get(i).setThanhTien(cthd.get(i).getDonGia()*cthd.get(i).getSoLuong());
+        }
+    }
     public ArrayList<ChiTietHoaDonDTO> search(String type, String keyword, int soLuong1, int soLuong2, float thanhTien1, float thanhTien2) {       
         ArrayList<ChiTietHoaDonDTO> result  = new ArrayList<>();
         cthd.forEach((ctHD) -> {
             switch (type) {
                 case "Tất cả":
                     if (ctHD.getIDHoaDon().toLowerCase().contains(keyword.toLowerCase())
-                            || ctHD.getIDMonAn().toLowerCase().contains(keyword.toLowerCase())
+                            || ctHD.getIDSanPham().toLowerCase().contains(keyword.toLowerCase())
                             || String.valueOf(ctHD.getSoLuong()).toLowerCase().contains(keyword.toLowerCase())
                             || String.valueOf(ctHD.getDonGia()).toLowerCase().contains(keyword.toLowerCase())) {
                         result.add(ctHD);
@@ -118,7 +108,7 @@ public class ChiTietHoaDonBUS {
                     break;
 
                 case "Mã món ăn":
-                    if (ctHD.getIDMonAn().toLowerCase().contains(keyword.toLowerCase())) {
+                    if (ctHD.getIDSanPham().toLowerCase().contains(keyword.toLowerCase())) {
                         result.add(ctHD);
                     }
                     break;
@@ -152,13 +142,3 @@ public class ChiTietHoaDonBUS {
         return result;
     }
 }
-
-    
-
-
-
-
-
-
-
-

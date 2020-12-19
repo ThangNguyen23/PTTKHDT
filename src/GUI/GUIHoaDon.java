@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 import BUS.HoaDonBUS;
 import BUS.Tool;
 import DTO.HoaDonDTO;
-import DTO.MonAnDTO;
+import DTO.SanPhamDTO;
 import Excel.DocExcel;
 import Excel.XuatExcel;
 import Report.PDF;
@@ -49,7 +45,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUIHoaDon extends GUIFormContent {
     //Tạo mảng tiêu đề
-    private static String array_HoaDon[]={"Mã hóa đơn","Mã nhân viên","Mã khách hàng","Mã khuyến mãi","Ngày lập","Tiền giảm giá","Tổng tiền"};   
+    private static String array_HoaDon[]={"Mã hóa đơn","Mã khách hàng","Mã nhân viên","Thành tiền","Ngày lập","Trạng thái"};   
     //Tạo JTable , GUIMyTable kế thừa từ JTable và được chỉnh sửa
     public GUIMyTable table_HoaDon;
     //Tạo các nút để chọn ngày
@@ -196,10 +192,9 @@ public class GUIHoaDon extends GUIFormContent {
     private void LamMoi(){
         table_HoaDon.clear();
         for (HoaDonDTO DTO : HoaDonBUS.HD) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_HoaDon.addRow(DTO);
             }
-        }
+        
     }
     //Đọc dữ liệu hóa đơn
     public void docDB() {
@@ -215,10 +210,8 @@ public class GUIHoaDon extends GUIFormContent {
         }
         
         for (HoaDonDTO HoaDonDTO : HoaDonBUS.HD) {
-            if (HoaDonDTO.getTrangThai().equals("Hiện")) {
                 table_HoaDon.addRow(HoaDonDTO);
-                    
-            }
+            
         }
     }
     @Override
@@ -423,79 +416,3 @@ public class GUIHoaDon extends GUIFormContent {
         new DocExcel().docFileExcelHoaDon();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

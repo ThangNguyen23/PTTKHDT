@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đang sửa
 package BUS;
 
 import DAO.HoaDonNhapDAO;
@@ -10,10 +6,6 @@ import DTO.HoaDonNhapDTO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-/**
- *
- * @author HP
- */
 public class HoaDonNhapBUS {
    public static ArrayList<HoaDonNhapDTO> dshdn;
    public HoaDonNhapBUS()
@@ -39,17 +31,10 @@ public class HoaDonNhapBUS {
     public void sua(HoaDonNhapDTO HDNDTO,int i)
     {
         HoaDonNhapDAO hdn = new HoaDonNhapDAO();
-        hdn.xoa(HDNDTO);//ghi vào database
+        hdn.sua(HDNDTO);//ghi vào database
         if (dshdn != null)
         dshdn.set(i,HDNDTO);//cập nhật arraylist
         
-    }
-     public void xoa(HoaDonNhapDTO HDNDTO,int index)
-    {
-        HoaDonNhapDAO hdn = new HoaDonNhapDAO();
-        hdn.xoa(HDNDTO); // update trạng thái lên database
-        if (dshdn != null)
-        dshdn.set(index, HDNDTO); // sửa lại thông tin trong list
     }
      //Xóa với ID
     public void xoa(String ID, int index) 
@@ -57,9 +42,8 @@ public class HoaDonNhapBUS {
         HoaDonNhapDAO data = new HoaDonNhapDAO();
         data.xoa(ID); // update trạng thái lên database
         HoaDonNhapDTO DTO=dshdn.get(index); // sửa lại thông tin trong list
-        DTO.setTrangThai("Ẩn");
         if (dshdn != null)
-        dshdn.set(index, DTO);
+            dshdn.remove(DTO);
     }
     
     //tìm vị trí của thằng có chứa mã mà mình cần
@@ -108,7 +92,7 @@ public class HoaDonNhapBUS {
                             || hdn.getIDNhanVien().toLowerCase().contains(keyword.toLowerCase())
                             || hdn.getIDNhaCungCap().toLowerCase().contains(keyword.toLowerCase())
                             || hdn.getNgayNhap().toString().toLowerCase().contains(keyword.toLowerCase())
-                            || String.valueOf(hdn.getTongTien()).toLowerCase().contains(keyword.toLowerCase())) {
+                            || String.valueOf(hdn.getThanhTien()).toLowerCase().contains(keyword.toLowerCase())) {
                         result.add(hdn);
                     }
 
@@ -139,7 +123,7 @@ public class HoaDonNhapBUS {
                     break;
 
                 case "Tổng tiền":
-                    if (String.valueOf(hdn.getTongTien()).toLowerCase().contains(keyword.toLowerCase())) {
+                    if (String.valueOf(hdn.getThanhTien()).toLowerCase().contains(keyword.toLowerCase())) {
                         result.add(hdn);
                     }
             }
@@ -149,7 +133,7 @@ public class HoaDonNhapBUS {
         for (int i = result.size() - 1; i >= 0; i--) {
             HoaDonNhapDTO hdn = result.get(i);
             LocalDate ngaylap = hdn.getNgayNhap();
-            float tongtien = (float) hdn.getTongTien();
+            float tongtien = (float) hdn.getThanhTien();
 
             Boolean ngayKhongThoa = (_ngay1 != null && ngaylap.isBefore(_ngay1)) || (_ngay2 != null && ngaylap.isAfter(_ngay2));
             Boolean tienKhongThoa = (_tong1 != -1 && tongtien < _tong1) || (_tong2 != -1 && tongtien > _tong2);
@@ -162,9 +146,3 @@ public class HoaDonNhapBUS {
         return result;
 }
 }
-
-
-
-
-
-

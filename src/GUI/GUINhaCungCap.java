@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 import BUS.NhaCungCapBUS;
@@ -46,7 +42,7 @@ import javax.swing.plaf.FontUIResource;
  */
 public class GUINhaCungCap extends GUIFormContent {
 
-    public static String array_NhaCungCap[] = {"Mã nhà cung cấp", "Tên", "SĐT", "Gmail", "Địa chỉ"};
+    public static String array_NhaCungCap[] = {"Mã nhà cung cấp", "Tên", "SĐT", "Địa chỉ"};
     public GUIMyTable table_NhaCungCap;
     private static JDialog Them_NhaCungCap;
     private static JDialog Sua;
@@ -129,18 +125,14 @@ public class GUINhaCungCap extends GUIFormContent {
                 cohieu = 1;
                 int a = JOptionPane.showConfirmDialog(Them_NhaCungCap, "Bạn chắc chứ ?", "", JOptionPane.YES_NO_OPTION);
                 if (a == JOptionPane.YES_OPTION) {
-                    
-                    if(checkTextThem(txt_NhaCungCap_Them[1].getText(),
-                            txt_NhaCungCap_Them[2].getText(),
-                            txt_NhaCungCap_Them[3].getText(),
-                            txt_NhaCungCap_Them[4].getText()))
+                    NhaCungCapDTO DTO = new NhaCungCapDTO();
+                            DTO.setIDNhaCungCap(txt_NhaCungCap_Them[0].getText());
+                            DTO.setTenNhaCungCap(txt_NhaCungCap_Them[1].getText());
+                            DTO.setSoDienThoai(txt_NhaCungCap_Them[2].getText());
+                            DTO.setDiaChi(txt_NhaCungCap_Them[3].getText());
+                    if(checkTextThem(DTO))
                     {
-                        NhaCungCapDTO DTO = new NhaCungCapDTO(txt_NhaCungCap_Them[0].getText(),
-                            txt_NhaCungCap_Them[1].getText(),
-                            txt_NhaCungCap_Them[2].getText(),
-                            txt_NhaCungCap_Them[3].getText(),
-                            txt_NhaCungCap_Them[4].getText(),
-                            "Hiện");
+                        
 
                     BUS.them(DTO); //thêm nhà cung cấp bên BUS đã có thêm vào database
                     table_NhaCungCap.addRow(DTO);
@@ -236,13 +228,15 @@ public class GUINhaCungCap extends GUIFormContent {
                 cohieu = 1;
                 int a = JOptionPane.showConfirmDialog(Sua, "Bạn chắc chứ ?", "", JOptionPane.YES_NO_OPTION);
                 if (a == JOptionPane.YES_OPTION) {
-                    if(checkTextSua(txt_NhaCungCap_Sua[1].getText(), 
-                            txt_NhaCungCap_Sua[2].getText(),
-                            txt_NhaCungCap_Sua[3].getText(),
-                            txt_NhaCungCap_Sua[4].getText()))
+                    NhaCungCapDTO DTO = new NhaCungCapDTO();
+                            DTO.setIDNhaCungCap(txt_NhaCungCap_Sua[0].getText());
+                            DTO.setTenNhaCungCap(txt_NhaCungCap_Sua[1].getText());
+                            DTO.setSoDienThoai(txt_NhaCungCap_Sua[2].getText());
+                            DTO.setDiaChi(txt_NhaCungCap_Sua[3].getText());
+                    if(checkTextSua(DTO))
                     {
                         //Chạy hàm để lưu lại việc sửa dữ liệu    
-                    buttonLuu_Sua();
+                    buttonLuu_Sua(DTO);
                     Sua.dispose();
                     }
                     
@@ -281,7 +275,7 @@ public class GUINhaCungCap extends GUIFormContent {
     }
 
     //Hàm lưu dữ liệu khi sửa
-    public void buttonLuu_Sua() {
+    public void buttonLuu_Sua(NhaCungCapDTO DTO) {
         int row = table_NhaCungCap.tb.getSelectedRow();
         int colum = table_NhaCungCap.tb.getSelectedColumn();
         String maNhaCungCap = table_NhaCungCap.tbModel.getValueAt(row, colum).toString();
@@ -298,12 +292,7 @@ public class GUINhaCungCap extends GUIFormContent {
             table_NhaCungCap.tb.setModel(table_NhaCungCap.tbModel);
 
             //Sửa dữ liệu trong database và arraylist trên bus
-            //Tạo đối tượng monAnDTO và truyền dữ liệu trực tiếp thông qua constructor
-            NhaCungCapDTO DTO = new NhaCungCapDTO(txt_NhaCungCap_Sua[0].getText(),
-                    txt_NhaCungCap_Sua[1].getText(),
-                    txt_NhaCungCap_Sua[2].getText(),
-                    txt_NhaCungCap_Sua[3].getText(),
-                    txt_NhaCungCap_Sua[4].getText());
+            
             //Tìm vị trí của row cần sửa
             int index = NhaCungCapBUS.timViTri(maNhaCungCap);
             //Truyền dữ liệu và vị trí vào bus
@@ -361,9 +350,8 @@ public class GUINhaCungCap extends GUIFormContent {
     private void LamMoi() {
         table_NhaCungCap.clear();
         for (NhaCungCapDTO DTO : NhaCungCapBUS.dsncc) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_NhaCungCap.addRow(DTO);
-            }
+            
         }
     }
 
@@ -378,10 +366,9 @@ public class GUINhaCungCap extends GUIFormContent {
         }
 
         for (NhaCungCapDTO monAnDTO : NhaCungCapBUS.dsncc) {
-            if (monAnDTO.getTrangThai().equals("Hiện")) {
                 table_NhaCungCap.addRow(monAnDTO);
 
-            }
+            
         }
     }
 
@@ -440,37 +427,33 @@ public class GUINhaCungCap extends GUIFormContent {
 
     }
 
-    public boolean checkTextThem(String tenNhaCungCap, String soDienThoai, String gmail, String diaChi) {
+    public boolean checkTextThem(NhaCungCapDTO DTO) {
         UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Segoe UI", 0, 20)));
-        if (tenNhaCungCap.equals("")
-                || soDienThoai.equals("")
-                || gmail.equals("")
-                || diaChi.equals("")) {
+        if (DTO.getTenNhaCungCap().equals("")
+                || DTO.getSoDienThoai().equals("")
+                || DTO.getDiaChi().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-        } else if (!Tool.isName(Tool.removeAccent(tenNhaCungCap))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getTenNhaCungCap()))) {
             JOptionPane.showMessageDialog(null, "Tên nhà cung cấp không được chứa ký tự đặc biệt");
             txt_NhaCungCap_Them[1].requestFocus();
-        } else if (!Tool.isLength50(tenNhaCungCap)) {
+        } else if (!Tool.isLength50(DTO.getTenNhaCungCap())) {
             JOptionPane.showMessageDialog(null, "Tên nhà cung cấp không được quá 50 ký tự");
             txt_NhaCungCap_Them[1].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(soDienThoai))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getSoDienThoai()))) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được chứa ký tự đặc biệt");
             txt_NhaCungCap_Them[2].requestFocus();
-        } else if (!Tool.isLength50(soDienThoai)) {
+        } else if (!Tool.isLength50(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được quá 50 ký tự");
             txt_NhaCungCap_Them[2].requestFocus();
-        } else if (!Tool.isPhoneNumber(soDienThoai)) {
+        } else if (!Tool.isPhoneNumber(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không chính xác");
             txt_NhaCungCap_Them[2].requestFocus();
-        } else if (!Tool.isGmail(gmail)) {
-            JOptionPane.showMessageDialog(null, "Gmail phải đúng định dạng và không được chứa ký tự đặc biệt ");
-            txt_NhaCungCap_Them[3].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(diaChi))) {
+        } else if (!Tool.isName(Tool.removeAccent( DTO.getDiaChi()))) {
             JOptionPane.showMessageDialog(null, "Địa chỉ không được chứa ký tự đặc biệt");
-            txt_NhaCungCap_Them[4].requestFocus();
-        } else if (!Tool.isLength50(diaChi)) {
+            txt_NhaCungCap_Them[3].requestFocus();
+        } else if (!Tool.isLength50( DTO.getDiaChi())) {
             JOptionPane.showMessageDialog(null, "Địa chỉ không được quá 50 ký tự");
-            txt_NhaCungCap_Them[4].requestFocus();
+            txt_NhaCungCap_Them[3].requestFocus();
         } else {
             return true;
 
@@ -478,37 +461,33 @@ public class GUINhaCungCap extends GUIFormContent {
         return false;
     }
 
-    public boolean checkTextSua(String tenNhaCungCap, String soDienThoai, String gmail, String diaChi) {
+    public boolean checkTextSua(NhaCungCapDTO DTO) {
         UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Segoe UI", 0, 20)));
-        if (tenNhaCungCap.equals("")
-                || soDienThoai.equals("")
-                || gmail.equals("")
-                || diaChi.equals("")) {
+        if (DTO.getTenNhaCungCap().equals("")
+                || DTO.getSoDienThoai().equals("")
+                ||  DTO.getDiaChi().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-        } else if (!Tool.isName(Tool.removeAccent(tenNhaCungCap))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getTenNhaCungCap()))) {
             JOptionPane.showMessageDialog(null, "Tên nhà cung cấp không được chứa ký tự đặc biệt");
             txt_NhaCungCap_Sua[1].requestFocus();
-        } else if (!Tool.isLength50(tenNhaCungCap)) {
+        } else if (!Tool.isLength50(DTO.getTenNhaCungCap())) {
             JOptionPane.showMessageDialog(null, "Tên nhà cung cấp không được quá 50 ký tự");
             txt_NhaCungCap_Sua[1].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(soDienThoai))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getSoDienThoai()))) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được chứa ký tự đặc biệt");
             txt_NhaCungCap_Sua[2].requestFocus();
-        } else if (!Tool.isLength50(soDienThoai)) {
+        } else if (!Tool.isLength50(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được quá 50 ký tự");
             txt_NhaCungCap_Sua[2].requestFocus();
-        } else if (!Tool.isPhoneNumber(soDienThoai)) {
+        } else if (!Tool.isPhoneNumber(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không chính xác");
             txt_NhaCungCap_Sua[2].requestFocus();
-        } else if (!Tool.isGmail(gmail)) {
-            JOptionPane.showMessageDialog(null, "Gmail phải đúng định dạng và không được chứa ký tự đặc biệt ");
-            txt_NhaCungCap_Sua[3].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(diaChi))) {
+        } else if (!Tool.isName(Tool.removeAccent( DTO.getDiaChi()))) {
             JOptionPane.showMessageDialog(null, "Địa chỉ không được chứa ký tự đặc biệt");
-            txt_NhaCungCap_Sua[4].requestFocus();
-        } else if (!Tool.isLength50(diaChi)) {
+            txt_NhaCungCap_Sua[3].requestFocus();
+        } else if (!Tool.isLength50( DTO.getDiaChi())) {
             JOptionPane.showMessageDialog(null, "Địa chỉ không được quá 50 ký tự");
-            txt_NhaCungCap_Sua[4].requestFocus();
+            txt_NhaCungCap_Sua[3].requestFocus();
         } else {
             return true;
 

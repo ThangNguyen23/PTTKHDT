@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package BUS;
 
 import DAO.NhaCungCapDAO;
@@ -57,23 +53,14 @@ public class NhaCungCapBUS {
         } 
         
     }
-     public void xoa(NhaCungCapDTO ncc,int index)
-    {
-        NhaCungCapDAO nccDao =new NhaCungCapDAO();
-        String xoancc = dsncc.get(index).getIDNhaCungCap();
-        nccDao.xoa(xoancc);
-        if(dsncc!=null)
-        dsncc.set(index,ncc);
-    }
      //Xóa với ID
     public void xoa(String ID, int index) 
     {
         NhaCungCapDAO data = new NhaCungCapDAO();
         data.xoa(ID); // update trạng thái lên database
         NhaCungCapDTO DTO=dsncc.get(index); // sửa lại thông tin trong list
-        DTO.setTrangThai("Ẩn");
         if(dsncc!=null)
-        dsncc.set(index, DTO);
+        dsncc.remove(DTO);
     }
     
     //tìm vị trí của thằng có chứa mã mà mình cần

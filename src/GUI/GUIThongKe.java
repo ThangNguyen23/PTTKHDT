@@ -1,3 +1,4 @@
+//Đang sửa
 package GUI;
 
 
@@ -55,7 +56,7 @@ public class GUIThongKe extends JPanel {
         //add tab thong ke san pham
 
         tabs.addTab("Thống kê tổng quát", getIcon("thongke-30.png"), tkH);
-        tabs.addTab("Món ăn", getIcon("monan-30.png"), null);
+        tabs.addTab("Sản phẩm", getIcon("monan-30.png"), null);
         tabs.addTab("Nhân viên", getIcon("nhanvien-30.png"), null);
         tabs.addTab("Khách hàng", getIcon("khachhang-30.png"), null);
         tabs.addTab("Nhà cung cấp", getIcon("nhacungcap-30.png"), null);
@@ -64,8 +65,8 @@ public class GUIThongKe extends JPanel {
             int i = tabs.getSelectedIndex();
             if (tabs.getComponentAt(i) == null) {
                 switch (tabs.getTitleAt(i)) {
-                    case "Món ăn":
-                        tabs.setComponentAt(i, new ThongKeMonAn());
+                    case "Sản phẩm":
+                        tabs.setComponentAt(i, new ThongKeSanPham());
                         break;
                     case "Nhân viên":
                         tabs.setComponentAt(i, new ThongKeNhanVien());
@@ -87,7 +88,7 @@ public class GUIThongKe extends JPanel {
 }
 
 class ThongKe_Hoang extends JPanel {
-    MonAnBUS qlmaBUS = new MonAnBUS();
+    SanPhamBUS qlspBUS = new SanPhamBUS();
     NhanVienBUS qlnvBUS = new NhanVienBUS();
     KhachHangBUS qlkhBUS = new KhachHangBUS();
     HoaDonBUS qlhdBUS = new HoaDonBUS();
@@ -95,15 +96,14 @@ class ThongKe_Hoang extends JPanel {
     HoaDonNhapBUS qlhdnBUS = new HoaDonNhapBUS();
     ChiTietHoaDonBUS qlcthdBUS = new ChiTietHoaDonBUS();
     ChiTietHoaDonNhapBUS qlcthdnBUS = new ChiTietHoaDonNhapBUS();
-    NguyenLieuBUS qlnlBUS = new NguyenLieuBUS();
 
     JTextField txNgay1 = new JTextField(7);
     JTextField txNgay2 = new JTextField(7);
     JTextField txNhanVien = new JTextField(10);
     JTextField txKhachHang = new JTextField(10);
     JTextField txNhaCC = new JTextField(10);
-    JTextField txMonAn = new JTextField(10);
-    JTextField txNguyenlieu = new JTextField(10);
+    JTextField txSanPham = new JTextField(10);
+    JTextField txSanpham = new JTextField(10);
 
 
     DatePicker dPicker1;
@@ -111,8 +111,8 @@ class ThongKe_Hoang extends JPanel {
     MoreButton btnChonNhanVien = new MoreButton();
     MoreButton btnChonKhachHang = new MoreButton();
     MoreButton btnChonNhaCC = new MoreButton();
-    MoreButton btnChonMonAn = new MoreButton();
-    MoreButton btnChonNguyenlieu = new MoreButton();
+    MoreButton btnChonSanPham = new MoreButton();
+    MoreButton btnChonSanpham = new MoreButton();
 
     JTabbedPane tabDoiTuongThongKe = new JTabbedPane();
     JPanel plThongKeHoaDon = new JPanel();
@@ -125,7 +125,7 @@ class ThongKe_Hoang extends JPanel {
     GUIMyTable tbKetQuaHoaDon = new GUIMyTable();
     GUIMyTable tbKetQuaPhieuNhap = new GUIMyTable();
 
-    JPanel plMonAn, plNhanVien, plKhachHang, plNhaCC,plNguyenlieu;
+    JPanel plSanPham, plNhanVien, plKhachHang, plNhaCC,plSanpham;
     RefreshButton btnRefresh = new RefreshButton();
 
     public ThongKe_Hoang() throws Exception {
@@ -160,10 +160,10 @@ class ThongKe_Hoang extends JPanel {
         
         // event
         // nút chọn
-        btnChonMonAn.addActionListener((ae) -> {
+        btnChonSanPham.addActionListener((ae) -> {
             GUIFormChon a = null;
             try {
-                a = new GUIFormChon(txMonAn,"Món ăn");
+                a = new GUIFormChon(txSanPham,"Sản phẩm");
                 
             } catch (Exception ex) {
                 Logger.getLogger(GUIThongKe.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,10 +198,10 @@ class ThongKe_Hoang extends JPanel {
             }
             a.setVisible(true);    
         });
-        btnChonNguyenlieu.addActionListener((ae) -> {
+        btnChonSanpham.addActionListener((ae) -> {
            GUIFormChon a = null;
             try {
-                a = new GUIFormChon(txNguyenlieu,"Nguyên liệu");
+                a = new GUIFormChon(txSanpham,"Nguyên liệu");
             } catch (Exception ex) {
                 Logger.getLogger(GUIThongKe.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -216,26 +216,26 @@ class ThongKe_Hoang extends JPanel {
         });
 
         //panel tìm kiếm
-        plMonAn = getPanelTieuChi("Món ăn", txMonAn, btnChonMonAn);
+        plSanPham = getPanelTieuChi("Sản phẩm", txSanPham, btnChonSanPham);
         plNhanVien = getPanelTieuChi("Nhân viên", txNhanVien, btnChonNhanVien);
         plKhachHang = getPanelTieuChi("Khách hàng", txKhachHang, btnChonKhachHang);
         plNhaCC = getPanelTieuChi("Nhà cung cấp", txNhaCC, btnChonNhaCC);
-        plNguyenlieu = getPanelTieuChi("Nguyên liệu", txNguyenlieu, btnChonNguyenlieu);
+        plSanpham = getPanelTieuChi("Nguyên liệu", txSanpham, btnChonSanpham);
 
         // panel chon tieu chi
         JPanel plChonTieuChi = new JPanel();
         plChonTieuChi.add(plChonNgay);
-        plChonTieuChi.add(plMonAn);
+        plChonTieuChi.add(plSanPham);
         plChonTieuChi.add(plNhanVien);
         plChonTieuChi.add(plKhachHang);
         plChonTieuChi.add(plNhaCC);
-        plChonTieuChi.add(plNguyenlieu);
+        plChonTieuChi.add(plSanpham);
         plChonTieuChi.add(btnRefresh);
         this.add(plChonTieuChi, BorderLayout.NORTH);
 
         // panel thong ke hoa don (ban duoc)
         plThongKeHoaDon.setLayout(new BorderLayout());
-        tbThongKeHoaDon.setHeaders(new String[]{"Hóa đơn", "Tên nhân viên", "Tên khách hàng", "Tên món ăn", "Số lượng", "Đơn giá", "Thành tiền"});
+        tbThongKeHoaDon.setHeaders(new String[]{"Hóa đơn", "Tên nhân viên", "Tên khách hàng", "Tên sản phẩm", "Số lượng", "Đơn giá", "Thành tiền"});
         //sắp xếp vị trí từ trong cột
         tbThongKeHoaDon.setAlignment(0, JLabel.CENTER);
         tbThongKeHoaDon.setAlignment(4, JLabel.CENTER);
@@ -253,7 +253,7 @@ class ThongKe_Hoang extends JPanel {
 
         // panal thong ke nhap (nhap kho)
         plThongKePhieuNhap.setLayout(new BorderLayout());
-        tbThongKePhieuNhap.setHeaders(new String[]{"Hóa đơn nhập", "Tên nhân viên", "Tên nhà cung cấp", "Tên nguyên liệu", "Số lượng", "Đơn giá", "Thành tiền"});
+        tbThongKePhieuNhap.setHeaders(new String[]{"Hóa đơn nhập", "Tên nhân viên", "Tên nhà cung cấp", "Tên sản phẩm", "Số lượng", "Đơn giá", "Thành tiền"});
         tbThongKePhieuNhap.setAlignment(0, JLabel.CENTER);
         tbThongKePhieuNhap.setAlignment(4, JLabel.CENTER);
         tbThongKePhieuNhap.setAlignment(5, JLabel.RIGHT);
@@ -280,10 +280,10 @@ class ThongKe_Hoang extends JPanel {
 
         // event chuyen tab
         // tab ban dau la tong ke tong quat nen an het
-        plNguyenlieu.setVisible(false);
+        plSanpham.setVisible(false);
         plNhaCC.setVisible(false);
         plNhanVien.setVisible(false);
-        plMonAn.setVisible(false);
+        plSanPham.setVisible(false);
         plKhachHang.setVisible(false);
 //        plChonNgay.setVisible(false);
         btnRefresh.setVisible(false);
@@ -294,10 +294,10 @@ class ThongKe_Hoang extends JPanel {
             Boolean HoaDonNhap_isSelected = (tabDoiTuongThongKe.getSelectedComponent() == plThongKePhieuNhap);
             btnRefresh.setVisible(HoaDon_isSelected||HoaDonNhap_isSelected);
             plNhaCC.setVisible(HoaDonNhap_isSelected);
-            plNguyenlieu.setVisible(HoaDonNhap_isSelected);
+            plSanpham.setVisible(HoaDonNhap_isSelected);
             plNhanVien.setVisible(HoaDon_isSelected || HoaDonNhap_isSelected);
             plKhachHang.setVisible(HoaDon_isSelected);
-            plMonAn.setVisible(HoaDon_isSelected);
+            plSanPham.setVisible(HoaDon_isSelected);
         });
 
         this.add(tabDoiTuongThongKe, BorderLayout.CENTER);
@@ -310,26 +310,25 @@ class ThongKe_Hoang extends JPanel {
 //    Này là panel tổng trong thống kê tổng quát
     private void setDataToPanelTong() {
         plThongKeSoLuong.removeAll();
-        plThongKeSoLuong.add(getJPanelTong("MÓN ĂN", "thucan1-100.png", qlmaBUS.getMonAnDTO().size(), Color.BLUE));
+        plThongKeSoLuong.add(getJPanelTong("SẢN PHẨM", "thucan1-100.png", qlspBUS.getSanPhamDTO().size(), Color.BLUE));
         plThongKeSoLuong.add(getJPanelTong("NHÂN VIÊN", "nhanvien1-100.png", qlnvBUS.getNhanVienDTO().size(), Color.BLUE));
         plThongKeSoLuong.add(getJPanelTong("KHÁCH HÀNG", "khachhang1-100.png", qlkhBUS.getKhachHangDTO().size(), Color.BLUE));
         plThongKeSoLuong.add(getJPanelTong("NHÀ CUNG CẤP", "nhacungcap-100.png", qlnccBUS.getNhaCungCapDTO().size(), Color.BLUE));
     }
 
     public void refresh() throws Exception  {
-        qlmaBUS.docDSMonAn();
+        qlspBUS.docDSSanPham();
         qlnvBUS.docDSNV();
         qlkhBUS.docDSKH();
         qlnccBUS.docDSNCC();
-        qlnlBUS.docDSNL();
         
         dPicker1.setDate(null);
         dPicker2.setDate(null);
-        txMonAn.setText("");
+        txSanPham.setText("");
         txNhanVien.setText("");
         txKhachHang.setText("");
         txNhaCC.setText(""); 
-        txNguyenlieu.setText("");
+        txSanpham.setText("");
 
         //chọn panel bán và nhập hàng
         Boolean HoaDon_isSelected = (tabDoiTuongThongKe.getSelectedComponent() == plThongKeHoaDon);
@@ -396,16 +395,16 @@ class ThongKe_Hoang extends JPanel {
         tbThongKeHoaDon.clear();
 
         int tongSLHoaDon = 0;
-        int tongSLMonAn = 0;
+        int tongSLSanPham = 0;
         float tongTatCaTien = 0;
 
-        String mama = txMonAn.getText();
+        String mama = txSanPham.getText();
         String manvLoc = txNhanVien.getText();
         String makhLoc = txKhachHang.getText();
 
         ArrayList<NhanVienDTO> dsnv = new ArrayList<>(); // danh sách lưu các nhân viên có làm hóa đơn
         ArrayList<KhachHangDTO> dskh = new ArrayList<>(); // danh sách lưu các khách hàng có làm hóa đơn
-        ArrayList<MonAnDTO> dsma = new ArrayList<>(); // lưu các mon an
+        ArrayList<SanPhamDTO> dsma = new ArrayList<>(); // lưu các mon an
 
         MyCheckDate mcd = new MyCheckDate(txNgay1, txNgay2);
 
@@ -435,16 +434,16 @@ class ThongKe_Hoang extends JPanel {
                 }
 
                 tbThongKeHoaDon.addRow(new String[]{
-                    hd.getIDHoaDon() + " (" + hd.getNgayLap().toString() + ")",
+                    hd.getIDHoaDon() + " (" + hd.getNgayBan().toString() + ")",
                     nv.getTenNhanVien() + " (" + nv.getIDNhanVien() + ")",
                     kh.getTenKhachHang() + " (" + kh.getIDKhachHang()+ ")",
                     "", "", "", "","",""
                 });
 
                 for (ChiTietHoaDonDTO cthd : dscthd) {
-                    MonAnDTO ma = qlmaBUS.getMonAnDTO(cthd.getIDMonAn());
+                    SanPhamDTO ma = qlspBUS.getSanPhamDTO(cthd.getIDSanPham());
                     // lọc
-                    if (!mama.equals("") && !ma.getIDMonAn().equals(mama)) {
+                    if (!mama.equals("") && !ma.getIDSanPham().equals(mama)) {
                         continue; // continue này sẽ lấy vòng lặp ChiTietHoaDon tiếp theo
                     }
                     // thêm vào danh sách để đếm
@@ -452,9 +451,9 @@ class ThongKe_Hoang extends JPanel {
                         dsma.add(ma); // thêm vào nếu chưa có
                     }
                                
-                    if(!mama.equals("") && ma.getIDMonAn().equals(mama))
+                    if(!mama.equals("") && ma.getIDSanPham().equals(mama))
                     {     
-                       if (!mama.equals("") && !ma.getIDMonAn().equals(mama)) {
+                       if (!mama.equals("") && !ma.getIDSanPham().equals(mama)) {
                         continue; // continue này sẽ lấy vòng lặp ChiTietHoaDon tiếp theo
                        }
                        if (!manvLoc.equals("") && !nv.getIDNhanVien().equals(manvLoc)
@@ -466,24 +465,22 @@ class ThongKe_Hoang extends JPanel {
                         dsma.add(ma); // thêm vào nếu chưa có
                        }
                        
-                       tongTien +=hd.getTienGiamGia();
                        
                     }
                     
                     tbThongKeHoaDon.addRow(new String[]{"", "", "",
-                        ma.getTenMonAn()+ " (" + ma.getIDMonAn()+ ")",
+                        ma.getTenSanPham()+ " (" + ma.getIDSanPham()+ ")",
                         String.valueOf(cthd.getSoLuong()),
                         PriceFormatter.format((float) cthd.getDonGia()),                       
                         PriceFormatter.format((float) cthd.getThanhTien())                        
                     });
                     
-                    tongTien2 = (float) (tongTien += cthd.getDonGia()*cthd.getSoLuong())-hd.getTienGiamGia();  
-                    tongSLMonAn += cthd.getSoLuong();
+                    tongTien2 = (float) (tongTien += cthd.getDonGia()*cthd.getSoLuong());  
+                    tongSLSanPham += cthd.getSoLuong();
                     
                 }
                
-            }
-            tbThongKeHoaDon.addRow(new String[]{"", "", "", "", "", "Giảm giá", PriceFormatter.format((float) hd.getTienGiamGia())});             
+            }           
             tbThongKeHoaDon.addRow(new String[]{"", "", "", "","","Tổng cộng", PriceFormatter.format(tongTien2)});
             tbThongKeHoaDon.addRow(new String[]{"", "", "", "", "","",""});
 
@@ -496,8 +493,8 @@ class ThongKe_Hoang extends JPanel {
             tongSLHoaDon + " hóa đơn",
             dsnv.size() + " nhân viên", 
             dskh.size() + " khách hàng",
-            dsma.size() + " món ăn",
-            tongSLMonAn + " phần ",
+            dsma.size() + " sản phẩm",
+            tongSLSanPham + " chiếc ",
             "",
             PriceFormatter.format(tongTatCaTien)
         });
@@ -510,14 +507,13 @@ class ThongKe_Hoang extends JPanel {
         int tongSLSanPham = 0;
         float tongTatCaTien = 0;
 
-        String manlLoc = txNguyenlieu.getText();
+        String maspLoc = txSanpham.getText();
         String manvLoc = txNhanVien.getText();
         String manccLoc = txNhaCC.getText();
 
         ArrayList<NhanVienDTO> dsnv = new ArrayList<>(); // danh sách lưu các nhân viên có làm phiếu nhập
         ArrayList<NhaCungCapDTO> dsncc = new ArrayList<>(); // danh sách lưu các ncc có làm phiếu nhập
-        ArrayList<NguyenLieuDTO> dsnl = new ArrayList<>(); // lưu các sản phẩm
-
+        ArrayList<SanPhamDTO> dssp = new ArrayList<>();
         MyCheckDate mcd = new MyCheckDate(txNgay1, txNgay2);
 
         for (HoaDonNhapDTO hdn : qlhdnBUS.search("Tất cả", "", mcd.getNgayTu(), mcd.getNgayDen(), -1, -1)) {
@@ -527,7 +523,6 @@ class ThongKe_Hoang extends JPanel {
             if (cthdn.size() > 0) {
                 NhanVienDTO nv = qlnvBUS.getNhanVienDTO(hdn.getIDNhanVien());
                 NhaCungCapDTO ncc = qlnccBUS.getNhaCungCapDTO(hdn.getIDNhaCungCap());
-
 //                // lọc theo textfield mã
 //                // bỏ qua lần lặp for này nếu nhân viên hoặc nha cung cap ko thỏa bộ lọc
                 if (!manvLoc.equals("") && !nv.getIDNhanVien().equals(manvLoc)
@@ -551,20 +546,14 @@ class ThongKe_Hoang extends JPanel {
                 });
 
                 for (ChiTietHoaDonNhapDTO dsctpn : cthdn) {
-                    NguyenLieuDTO nl = qlnlBUS.getNguyenLieuDTO(dsctpn.getIDNguyenLieu());
-
+                    SanPhamDTO sp = qlspBUS.getSanPhamDTO(dsctpn.getIDSanPham());
                     // lọc
-                    if (!manlLoc.equals("") && !nl.getIDNguyenLieu().equals(manlLoc)) {
+                    if (!maspLoc.equals("")) {
                         continue; // continue này sẽ lấy vòng lặp ChiTietPhieuNhap tiếp theo
                     }
 
-                    // thêm vào danh sách để đếm
-                    if (!dsnl.contains(nl)) {
-                        dsnl.add(nl); // thêm vào nếu chưa có
-                    }
-
                     tbThongKePhieuNhap.addRow(new String[]{"", "", "",
-                        nl.getTenNguyenLieu()+ " (" + nl.getIDNguyenLieu()+ ")",
+                        sp.getTenSanPham()+ " (" + sp.getIDSanPham()+ ")",
                         String.valueOf(dsctpn.getSoLuong()),
                         PriceFormatter.format(dsctpn.getGiaNhap()),
                         PriceFormatter.format(dsctpn.getSoLuong() * dsctpn.getGiaNhap())
@@ -586,8 +575,8 @@ class ThongKe_Hoang extends JPanel {
             tongSLPhieuNhap + " hóa đơn nhập",
             dsnv.size() + " nhân viên",
             dsncc.size() + " nhà cung cấp",
-            dsnl.size() + " loại",
-            tongSLSanPham + " phần",
+            dssp.size() + " loại",
+            tongSLSanPham + " chiếc",
             "",
             PriceFormatter.format(tongTatCaTien)
         });

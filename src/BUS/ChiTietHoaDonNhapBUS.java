@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package BUS;
 
 import DAO.ChiTietHoaDonNhapDAO;
 import DTO.ChiTietHoaDonNhapDTO;
-import DTO.NguyenLieuDTO;
+import DTO.SanPhamDTO;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +23,7 @@ public class ChiTietHoaDonNhapBUS {
             dscthdn = new ArrayList<>();
         }
         dscthdn = cthdn.docCTHDN(); // đọc dữ liệu từ database
+        autosetDonGiavaThanhTien();
     }
     public void  them(ChiTietHoaDonNhapDTO CTHDNDTO)
     {
@@ -38,36 +35,26 @@ public class ChiTietHoaDonNhapBUS {
     }
 
      public void trusoluong(ChiTietHoaDonNhapDTO ctHDN){
-         NguyenLieuBUS bus=new NguyenLieuBUS();
-         for(NguyenLieuDTO DTO:NguyenLieuBUS.dsnl)
+         SanPhamBUS bus=new SanPhamBUS();
+         for(SanPhamDTO DTO:SanPhamBUS.dsSanPham)
          {
-             if(ctHDN.getIDNguyenLieu().equals(DTO.getIDNguyenLieu()))
+             if(ctHDN.getIDSanPham().equals(DTO.getIDSanPham()))
              {
-                 int i=NguyenLieuBUS.timViTri(DTO.getIDNguyenLieu());
+                 int i=SanPhamBUS.timViTri(DTO.getIDSanPham());
                  DTO.setSoLuong(DTO.getSoLuong()+ctHDN.getSoLuong());
-                 NguyenLieuBUS.dsnl.set(i, DTO);
+                 SanPhamBUS.dsSanPham.set(i, DTO);
                  bus.sua(DTO, i);
                  return;
              }
          }
      }
-//    public ArrayList<ChiTietHoaDonNhapDTO> getAllChiTiet(String mahdn) {
-//        ArrayList<ChiTietHoaDonNhapDTO> result = new ArrayList<>();
-//        for (ChiTietHoaDonNhapDTO cthdn : dscthdn) {
-//            if (cthdn.getIDHoaDonNhap().equals(mahdn)) {
-//                result.add(cthdn);
-//            }
-//        }
-//        return result;
-//    }
-    
     public  ArrayList<ChiTietHoaDonNhapDTO> getChiTietHoaDonNhapDTO() {
-    return dscthdn;
+        return dscthdn;
     }
     
     public ChiTietHoaDonNhapDTO getChiTiet(String mahd, String manl) {
         for (ChiTietHoaDonNhapDTO cthdnDTO : dscthdn) {
-            if (cthdnDTO.getIDHoaDonNhap().equals(mahd) && cthdnDTO.getIDNguyenLieu().equals(manl)) {
+            if (cthdnDTO.getIDHoaDonNhap().equals(mahd) && cthdnDTO.getIDSanPham().equals(manl)) {
                 return cthdnDTO;
             }
         }
@@ -86,12 +73,20 @@ public class ChiTietHoaDonNhapBUS {
         }
         return result;
     }
+    private void autosetDonGiavaThanhTien(){
+        for(int i=0;i<dscthdn.size();i++){
+            dscthdn.get(i).setGiaNhap(SanPhamBUS.dsSanPham.get(SanPhamBUS.timViTri(dscthdn.get(i).getIDSanPham())).getGia());
+        }
+       for(int i=0;i<dscthdn.size();i++){
+            dscthdn.get(i).setThanhTien(dscthdn.get(i).getGiaNhap()*dscthdn.get(i).getSoLuong());
+        }
+    }
     public ArrayList<ChiTietHoaDonNhapDTO> search(String type, String value) {
         ArrayList<ChiTietHoaDonNhapDTO> result = new ArrayList<>();
         dscthdn.forEach((cthdn) -> {
             if (type.equals("Tất cả")) {
                 if (cthdn.getIDHoaDonNhap().toLowerCase().contains(value.toLowerCase())
-                        || cthdn.getIDNguyenLieu().toLowerCase().contains(value.toLowerCase())
+                        || cthdn.getIDSanPham().toLowerCase().contains(value.toLowerCase())
                         || String.valueOf(cthdn.getGiaNhap()).toLowerCase().contains(value.toLowerCase())
                         || String.valueOf(cthdn.getSoLuong()).toLowerCase().contains(value.toLowerCase())) {
                     result.add(cthdn);
@@ -104,7 +99,7 @@ public class ChiTietHoaDonNhapBUS {
                         }
                         break;
                     case "Mã nguyên liệu":
-                        if (cthdn.getIDNguyenLieu().toLowerCase().contains(value.toLowerCase())) {
+                        if (cthdn.getIDSanPham().toLowerCase().contains(value.toLowerCase())) {
                             result.add(cthdn);
                         }
                         break;

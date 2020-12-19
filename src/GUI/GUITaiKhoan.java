@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 import BUS.NhanVienBUS;
@@ -42,13 +38,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.FontUIResource;
 
-/**
- *
- * @author Nguyen
- */
 public class GUITaiKhoan extends GUIFormContent {
 
-    public static String array_TaiKhoan[] = {"Tài khoản", "Mã nhân viên", "Mã quyền", "Mật khẩu"};
+    public static String array_TaiKhoan[] = {"Tài khoản", "Mật khẩu", "Mã nhân viên", "Mã quyền"};
     public GUIMyTable table_TaiKhoan;
     private static JDialog Them_TaiKhoan;
     private static JDialog Sua;
@@ -113,7 +105,6 @@ public class GUITaiKhoan extends GUIFormContent {
             label_TaiKhoan[i] = new JLabel(array_TaiKhoan[i]);
             label_TaiKhoan[i].setBounds(100, y, 100, 30);
             Them_TaiKhoan.add(label_TaiKhoan[i]);
-
             txt_TaiKhoan_Them[i] = new JTextField();
             txt_TaiKhoan_Them[i].setBounds(200, y, 150, 30);
             //Tạo nút để lấy tên ảnh 
@@ -143,7 +134,7 @@ public class GUITaiKhoan extends GUIFormContent {
             Them_TaiKhoan.add(txt_TaiKhoan_Them[i]);
         }
         txt_TaiKhoan_Them[2].setEditable(false);
-        txt_TaiKhoan_Them[1].setEditable(false);
+        txt_TaiKhoan_Them[3].setEditable(false);
         //Tạo nút lưu
         JButton Luu = new JButton("Lưu");
         Luu.setBackground(Color.decode("#90CAF9"));
@@ -155,16 +146,13 @@ public class GUITaiKhoan extends GUIFormContent {
                 cohieu = 1;
                 int a = JOptionPane.showConfirmDialog(Them_TaiKhoan, "Bạn chắc chứ ?", "", JOptionPane.YES_NO_OPTION);
                 if (a == JOptionPane.YES_OPTION) {
-                    if(checkTextThem(txt_TaiKhoan_Them[1].getText(),
-                            txt_TaiKhoan_Them[2].getText(),
-                            txt_TaiKhoan_Them[3].getText()))
+                    TaiKhoanDTO DTO = new TaiKhoanDTO();
+                            DTO.setTaiKhoan(txt_TaiKhoan_Them[0].getText());
+                            DTO.setIDNhanVien(txt_TaiKhoan_Them[1].getText());
+                            DTO.setIDPhanQuyen(txt_TaiKhoan_Them[2].getText());
+                            DTO.setMatKhau(txt_TaiKhoan_Them[3].getText());
+                    if(checkTextThem(DTO))
                     {
-                        TaiKhoanDTO DTO = new TaiKhoanDTO(txt_TaiKhoan_Them[0].getText(),
-                            txt_TaiKhoan_Them[1].getText(),
-                            txt_TaiKhoan_Them[2].getText(),
-                            txt_TaiKhoan_Them[3].getText(),
-                            "Hiện");
-
                     BUS.them(DTO); //thêm công thức bên BUS đã có thêm vào database
                     table_TaiKhoan.addRow(DTO);
                     //clear textfield trong Them
@@ -267,12 +255,15 @@ public class GUITaiKhoan extends GUIFormContent {
                 cohieu = 1;
                 int a = JOptionPane.showConfirmDialog(Sua, "Bạn chắc chứ ?", "", JOptionPane.YES_NO_OPTION);
                 if (a == JOptionPane.YES_OPTION) {
-                    if(checkTextSua(txt_TaiKhoan_Sua[1].getText(),
-                            txt_TaiKhoan_Sua[2].getText(),
-                            txt_TaiKhoan_Sua[3].getText()))
+                    TaiKhoanDTO DTO = new TaiKhoanDTO();
+                            DTO.setTaiKhoan(txt_TaiKhoan_Sua[0].getText());
+                            DTO.setIDNhanVien(txt_TaiKhoan_Sua[2].getText());
+                            DTO.setIDPhanQuyen(txt_TaiKhoan_Sua[3].getText());
+                            DTO.setMatKhau(txt_TaiKhoan_Sua[1].getText());
+                    if(checkTextSua(DTO))
                     {
                         //Chạy hàm để lưu lại việc sửa dữ liệu    
-                    buttonLuu_Sua();
+                    buttonLuu_Sua(DTO);
 
                     Sua.dispose();
                     }
@@ -284,7 +275,7 @@ public class GUITaiKhoan extends GUIFormContent {
         });
         Sua.add(Luu);
         txt_TaiKhoan_Sua[2].setEditable(false);
-        txt_TaiKhoan_Sua[1].setEditable(false);
+        txt_TaiKhoan_Sua[3].setEditable(false);
         JButton Thoat = new JButton("Thoát");
         Thoat.setBackground(Color.decode("#90CAF9"));
         Thoat.setBounds(250, y, 100, 50);
@@ -313,7 +304,7 @@ public class GUITaiKhoan extends GUIFormContent {
     }
 
     //Hàm lưu dữ liệu khi sửa
-    public void buttonLuu_Sua() {
+    public void buttonLuu_Sua(TaiKhoanDTO DTO) {
         int row = table_TaiKhoan.tb.getSelectedRow();
         int colum = table_TaiKhoan.tb.getSelectedColumn();
         String maTaiKhoan = table_TaiKhoan.tbModel.getValueAt(row, colum).toString();
@@ -330,23 +321,12 @@ public class GUITaiKhoan extends GUIFormContent {
             table_TaiKhoan.tb.setModel(table_TaiKhoan.tbModel);
 
             //Sửa dữ liệu trong database và arraylist trên bus
-            //Tạo đối tượng monAnDTO và truyền dữ liệu trực tiếp thông qua constructor
-            TaiKhoanDTO DTO = new TaiKhoanDTO(txt_TaiKhoan_Sua[0].getText(),
-                    txt_TaiKhoan_Sua[1].getText(),
-                    txt_TaiKhoan_Sua[2].getText(),
-                    txt_TaiKhoan_Sua[3].getText());
             //Tìm vị trí của row cần sửa
             int index = TaiKhoanBUS.timViTri(maTaiKhoan);
             //Truyền dữ liệu và vị trí vào bus
             BUS.sua(DTO, index);
 //        }
     }
-
-//    @Override
-//    protected void Them_click(MouseEvent evt) {
-//        Them_Frame();
-//    }
-
     //Hàm sự kiện khi click vào nút Sửa
     @Override
     protected void Sua_click(MouseEvent evt) {
@@ -391,9 +371,8 @@ public class GUITaiKhoan extends GUIFormContent {
     private void LamMoi() {
         table_TaiKhoan.clear();
         for (TaiKhoanDTO DTO : TaiKhoanBUS.dstk) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_TaiKhoan.addRow(DTO);
-            }
+            
         }
     }
 
@@ -408,10 +387,7 @@ public class GUITaiKhoan extends GUIFormContent {
         }
 
         for (TaiKhoanDTO monAnDTO : TaiKhoanBUS.dstk) {
-            if (monAnDTO.getTrangThai().equals("Hiện")) {
                 table_TaiKhoan.addRow(monAnDTO);
-
-            }
         }
     }
 
@@ -503,19 +479,19 @@ public class GUITaiKhoan extends GUIFormContent {
 
     }
 
-    public boolean checkTextThem(String maNhanVien, String maQuyen, String matKhau) {
+    public boolean checkTextThem(TaiKhoanDTO DTO) {
         UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Segoe UI", 0, 20)));
-        if (maNhanVien.equals("")
-                || maQuyen.equals("")
-                || matKhau.equals("")) {
+        if (DTO.getIDNhanVien().equals("")
+                || DTO.getIDPhanQuyen().equals("")
+                || DTO.getMatKhau().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-        } else if (Tool.isDuplicateMaNhanVien(maNhanVien)) {
+        } else if (Tool.isDuplicateMaNhanVien(DTO.getIDNhanVien())) {
             JOptionPane.showMessageDialog(null, "Nhân viên này đã có tài khoản rồi");
             txt_TaiKhoan_Them[1].requestFocus();
-        } else if (!Tool.isName((matKhau))) {
+        } else if (!Tool.isName((DTO.getMatKhau()))) {
             JOptionPane.showMessageDialog(null, "Mật khẩu không được chứa ký tự đặc biệt và dấu");
             txt_TaiKhoan_Them[3].requestFocus();
-        } else if (!Tool.isLength50(matKhau)) {
+        } else if (!Tool.isLength50(DTO.getMatKhau())) {
             JOptionPane.showMessageDialog(null, "Mật khẩu không được quá 50 ký tự");
             txt_TaiKhoan_Them[3].requestFocus();
         } else {
@@ -525,24 +501,24 @@ public class GUITaiKhoan extends GUIFormContent {
         return false;
     }
     
-    public boolean checkTextSua(String maNhanVien, String maQuyen, String matKhau) {
+    public boolean checkTextSua(TaiKhoanDTO DTO) {
         UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Segoe UI", 0, 20)));
-        if (maNhanVien.equals("")
-                || maQuyen.equals("")
-                || matKhau.equals("")) {
+        if (DTO.getIDNhanVien().equals("")
+                || DTO.getIDPhanQuyen().equals("")
+                || DTO.getMatKhau().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-        }else if(!TaiKhoanBUS.checkChucVuVaMaQuyen(NhanVienBUS.getChucVuTuMaNhanVien(maNhanVien),maQuyen))
+        }else if(!TaiKhoanBUS.checkChucVuVaMaQuyen(NhanVienBUS.getChucVuTuMaNhanVien(DTO.getIDNhanVien()),DTO.getIDPhanQuyen()))
                 {
                     //xuất chức vụ
-                    System.out.println(NhanVienBUS.getChucVuTuMaNhanVien(maNhanVien));
+                    System.out.println(NhanVienBUS.getChucVuTuMaNhanVien(DTO.getIDNhanVien()));
                     //xuất 
-                    System.out.println(maQuyen);
+                    System.out.println(DTO.getIDPhanQuyen());
                     JOptionPane.showMessageDialog(null, "Chức vụ của nhân viên không được phép có quyền này");
                 }
-        else if (!Tool.isName((matKhau))) {
+        else if (!Tool.isName((DTO.getMatKhau()))) {
             JOptionPane.showMessageDialog(null, "Mật khẩu không được chứa ký tự đặc biệt và dấu");
             txt_TaiKhoan_Sua[3].requestFocus();
-        } else if (!Tool.isLength50(matKhau)) {
+        } else if (!Tool.isLength50(DTO.getMatKhau())) {
             JOptionPane.showMessageDialog(null, "Mật khẩu không được quá 50 ký tự");
             txt_TaiKhoan_Sua[3].requestFocus();
         } else {

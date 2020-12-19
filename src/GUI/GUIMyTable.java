@@ -1,3 +1,4 @@
+//Đã sửa
 package GUI;
 
 import DTO.*;
@@ -98,26 +99,17 @@ public class GUIMyTable extends JPanel {
     public void addRow(String[] data) {
         tbModel.addRow(data);
     }
-    public void addRow(MonAnDTO data) {
+    public void addRow(SanPhamDTO data) {
         addRow(new String[]{
-                    data.getIDMonAn(),
-                    data.getTenMonAn(),
-                    data.getDonViTinh(),
-                    String.valueOf(data.getDonGia()),
-                    data.getHinhAnh(),
-                    data.getLoai(),
-                    String.valueOf(data.getSoLuong())
-                });
-    }
-    public void addRow(NguyenLieuDTO data) {
-        addRow(new String[]{
-                    data.getIDNguyenLieu(),
-                    data.getTenNguyenLieu(),                   
-                    String.valueOf(data.getDonGia()),
-                    data.getHinhAnh(),
-                    data.getLoai(),
-                    data.getDonViTinh(),
-                    String.valueOf(data.getSoLuong())
+                    data.getIDSanPham(),
+                    data.getTenSanPham(),
+                    data.getIDDay(),
+                    data.getIDThuongHieu(),
+                    data.getIDNhaCungCap(),
+                    data.getBaoHanh(),
+                    String.valueOf(data.getSoLuong()),
+                    String.valueOf(data.getGia()),
+                    data.getHinhAnh()
                 });
     }
     public void addRow(KhachHangDTO data) {
@@ -125,10 +117,8 @@ public class GUIMyTable extends JPanel {
                     data.getIDKhachHang(),
                     data.getHoKhachHang(),
                     data.getTenKhachHang(),
-                    data.getGmail(),
-                    data.getGioiTinh(),
-                    data.getSoDienThoai(),
-                    String.valueOf(data.getTongChiTieu())
+                    data.getDiaChiNhanHang(),
+                    data.getSoDienThoai()
                 });
     }
     public void addRow(NhanVienDTO data) {
@@ -145,38 +135,36 @@ public class GUIMyTable extends JPanel {
     public void addRow(HoaDonDTO data) {
         addRow(new String[]{
                     data.getIDHoaDon(),
-                    data.getIDNhanVien(),
                     data.getIDKhachHang(),
-                    data.getIDKhuyenMai(),
-                    String.valueOf(data.getNgayLap()),
-                    String.valueOf(data.getTienGiamGia()),
-                    String.valueOf(data.getTongTien())
+                    data.getIDNhanVien(),
+                    String.valueOf(data.getThanhTien()),
+                    String.valueOf(data.getNgayBan()),
+                    data.getTrangThai()
                 });
     }
     public void addRow(HoaDonNhapDTO data) {
         addRow(new String[]{
                     data.getIDHoaDonNhap(),
-                    data.getIDNhanVien(),
                     data.getIDNhaCungCap(),
-                    String.valueOf(data.getNgayNhap()),
-                    String.valueOf(data.getTongTien())
+                    data.getIDNhanVien(),
+                    String.valueOf(data.getThanhTien()),
+                    String.valueOf(data.getNgayNhap())
                 });
     }
     public void addRow(NhaCungCapDTO data) {
         addRow(new String[]{
                     data.getIDNhaCungCap(),
                     data.getTenNhaCungCap(),
-                    data.getSoDienThoai(),
-                    data.getGmail(),
-                    data.getDiaChi()
+                    data.getDiaChi(),
+                    data.getSoDienThoai()
                 });
     }
     public void addRow(TaiKhoanDTO data) {
         addRow(new String[]{
                     data.getTaiKhoan(),
+                    data.getMatKhau(),
                     data.getIDNhanVien(),
-                    data.getIDPhanQuyen(),
-                    data.getMatKhau()
+                    data.getIDPhanQuyen()
                 });
     }
     public void addRow(PhanQuyenDTO data) {
@@ -186,44 +174,30 @@ public class GUIMyTable extends JPanel {
                     data.getMoTaQuyen()
                 });
     }
-    public void addRow(KhuyenMaiDTO data) {
-        addRow(new String[]{
-                    data.getIDKhuyenMai(),
-                    data.getTenChuongTrinh(),
-                    String.valueOf(data.getTienGiam()),
-                    String.valueOf(data.getNgayBatDau()),
-                    String.valueOf(data.getNgayKetThuc()),
-                    data.getNoiDungGiamGia()                    
-                });
-    }
-    public void addRow(CongThucDTO data) {
-        addRow(new String[]{
-                    data.getIDCongThuc(),
-                    data.getIDMonAn(),
-                    data.getMoTaCongThuc()
-                });
-    }
     public void addRow(ChiTietHoaDonDTO data) {
         addRow(new String[]{
-                    data.getIDMonAn(),
-                    String.valueOf(data.getSoLuong()),
-                    String.valueOf(data.getDonGia()),
-                    String.valueOf(data.getThanhTien())
+                    data.getIDHoaDon(),
+                    data.getIDSanPham(),
+                    String.valueOf(data.getSoLuong())
                 });
     }
     public void addRow(ChiTietHoaDonNhapDTO data) {
         addRow(new String[]{
-                    data.getIDNguyenLieu(),
-                    String.valueOf(data.getSoLuong()),
-                    String.valueOf(data.getGiaNhap()),
-                    String.valueOf(data.getThanhTien())
+                    data.getIDHoaDonNhap(),
+                    data.getIDSanPham(),
+                    String.valueOf(data.getSoLuong())
                 });
     }
-    public void addRow(ChiTietNguyenLieuDTO data) {
+    public void addRow(ThuongHieuDTO data) {
         addRow(new String[]{
-                    data.getIDNguyenLieu(),
-                    String.valueOf(data.getSoLuong()),
-                    
+                    data.getIDThuongHieu(),
+                    data.getTenThuongHieu()
+                });
+    }
+    public void addRow(LoaiDayDTO data) {
+        addRow(new String[]{
+                    data.getIDLoaiDay(),
+                    data.getTenLoaiDay()
                 });
     }
     public JTable getTable() {
@@ -269,55 +243,3 @@ public class GUIMyTable extends JPanel {
         tb.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

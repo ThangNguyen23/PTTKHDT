@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 import BUS.HoaDonNhapBUS;
@@ -43,7 +39,7 @@ import javax.swing.event.DocumentListener;
  * @author Nguyen
  */
 public class GUIHoaDonNhap extends GUIFormContent {
-    private static String array_HoaDonNhap[]={"Mã hóa đơn","Mã nhân viên","Mã nhà cung cấp","Ngày nhập","Tổng tiền"};   
+    private static String array_HoaDonNhap[]={"Mã hóa đơn","Mã nhà cung cấp","Mã nhân viên","Thành tiền","Ngày nhập"};   
     public GUIMyTable table_HoaDonNhap;
     private static JDialog Them;
     private static JDialog Sua;
@@ -192,10 +188,9 @@ public class GUIHoaDonNhap extends GUIFormContent {
         }
         
         for (HoaDonNhapDTO monAnDTO : HoaDonNhapBUS.dshdn) {
-            if (monAnDTO.getTrangThai().equals("Hiện")) {
                 table_HoaDonNhap.addRow(monAnDTO);
                     
-            }
+            
         }
     }
     @Override
@@ -345,9 +340,8 @@ public class GUIHoaDonNhap extends GUIFormContent {
     private void LamMoi(){
         table_HoaDonNhap.clear();
         for (HoaDonNhapDTO DTO : HoaDonNhapBUS.dshdn) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_HoaDonNhap.addRow(DTO);
-            }
+            
         }
     }
     
@@ -413,29 +407,3 @@ public class GUIHoaDonNhap extends GUIFormContent {
         new DocExcel().docFileExcelHoaDonNhap();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

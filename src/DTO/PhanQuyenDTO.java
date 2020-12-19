@@ -1,22 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DTO;
-
-/**
- *
- * @author Nguyen
- */
 public class PhanQuyenDTO {
-    private String IDPhanQuyen,TenQuyen,MoTaQuyen, TrangThai;
+    private String IDPhanQuyen,TenQuyen,MoTaQuyen;
 
-    public PhanQuyenDTO(String IDPhanQuyen, String TenQuyen, String MoTaQuyen,String TrangThai) {
-        this.IDPhanQuyen = IDPhanQuyen;
-        this.TenQuyen = TenQuyen;
-        this.MoTaQuyen = MoTaQuyen;
-        this.TrangThai=TrangThai;
+    public PhanQuyenDTO() {
     }
 
     public PhanQuyenDTO(String IDPhanQuyen, String TenQuyen, String MoTaQuyen) {
@@ -25,17 +12,6 @@ public class PhanQuyenDTO {
         this.MoTaQuyen = MoTaQuyen;
     }
 
-    public PhanQuyenDTO() {
-    }
-
-    public String getTrangThai() {
-        return TrangThai;
-    }
-
-    public void setTrangThai(String TrangThai) {
-        this.TrangThai = TrangThai;
-    }
-    
     public String getIDPhanQuyen() {
         return IDPhanQuyen;
     }
@@ -61,8 +37,3 @@ public class PhanQuyenDTO {
     }
     
 }
-
-
-
-
-

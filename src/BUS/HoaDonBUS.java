@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đang sửa, còn phần tổng chi tiêu khách hàng
 package BUS;
 
 import DAO.HoaDonDAO;
@@ -10,11 +6,6 @@ import DTO.HoaDonDTO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
-/**
- *
- * @author HP
- */
 public class HoaDonBUS {
 
     public static ArrayList<HoaDonDTO> HD;
@@ -39,7 +30,6 @@ public class HoaDonBUS {
         hd.them(HDDTO);//ghi vào database
         if (HD != null)
         HD.add(HDDTO);//cập nhật arraylist
-        KhachHangBUS.TongChiTieu(HDDTO.getIDKhachHang(), HDDTO.getTongTien());
     }
 
     public void sua(HoaDonDTO HDDTO, int i) //cần ghi lại khi qua class khác
@@ -47,15 +37,7 @@ public class HoaDonBUS {
         HoaDonDAO hd = new HoaDonDAO();
         hd.sua(HDDTO);
         if (HD != null)
-        HD.set(i, HDDTO);
-    }
-
-    public void xoa(HoaDonDTO HDDTO, int index) //cần ghi lại khi qua class khác
-    {
-        HoaDonDAO hd = new HoaDonDAO();
-        hd.xoa(HDDTO); // update trạng thái lên database
-        if (HD != null)
-        HD.set(index, HDDTO); // sửa lại thông tin trong list
+            HD.set(i, HDDTO);
     }
     //Xóa với ID
     public void xoa(String ID, int index) 
@@ -63,9 +45,8 @@ public class HoaDonBUS {
         HoaDonDAO data = new HoaDonDAO();
         data.xoa(ID); // update trạng thái lên database
         HoaDonDTO DTO=HD.get(index); // sửa lại thông tin trong list
-        DTO.setTrangThai("Ẩn");
         if (HD != null)
-        HD.set(index, DTO);
+            HD.remove(DTO);
     }
     
     //tìm vị trí của thằng có chứa mã mà mình cần
@@ -116,9 +97,8 @@ public class HoaDonBUS {
                             || HoaDonDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase())
                             || HoaDonDTO.getIDKhachHang().toLowerCase().contains(value.toLowerCase())
                             || HoaDonDTO.getIDKhachHang().toLowerCase().contains(value.toLowerCase())
-                            || HoaDonDTO.getNgayLap().toString().toLowerCase().contains(value.toLowerCase())
-                            || String.valueOf(HoaDonDTO.getTienGiamGia()).toLowerCase().contains(value.toLowerCase())
-                            || String.valueOf(HoaDonDTO.getTongTien()).toLowerCase().contains(value.toLowerCase())) {
+                            || HoaDonDTO.getNgayBan().toString().toLowerCase().contains(value.toLowerCase())
+                            || String.valueOf(HoaDonDTO.getThanhTien()).toLowerCase().contains(value.toLowerCase())) {
                         result.add(HoaDonDTO);
                     }
 
@@ -143,18 +123,12 @@ public class HoaDonBUS {
                     break;
 
                 case "Ngày lập":
-                    if (HoaDonDTO.getNgayLap().toString().toLowerCase().contains(value.toLowerCase())) {
+                    if (HoaDonDTO.getNgayBan().toString().toLowerCase().contains(value.toLowerCase())) {
                         result.add(HoaDonDTO);
                     }
                     break;
-                case "Giảm giá":
-                    if (String.valueOf(HoaDonDTO.getTienGiamGia()).toLowerCase().contains(value.toLowerCase())) {
-                        result.add(HoaDonDTO);
-                    }
-                    break;
-
                 case "Tổng tiền":
-                    if (String.valueOf(HoaDonDTO.getTongTien()).toLowerCase().contains(value.toLowerCase())) {
+                    if (String.valueOf(HoaDonDTO.getTrangThai()).toLowerCase().contains(value.toLowerCase())) {
                         result.add(HoaDonDTO);
                     }
             }
@@ -162,8 +136,8 @@ public class HoaDonBUS {
         //Ngay lap, tong tien
         for (int i = result.size() - 1; i >= 0; i--) {
             HoaDonDTO hd = result.get(i);
-            LocalDate ngaylap = hd.getNgayLap();
-            float tongtien = (float) hd.getTongTien();
+            LocalDate ngaylap = hd.getNgayBan();
+            float tongtien = (float) hd.getThanhTien();
 
             Boolean ngayKhongThoa = (_ngay1 != null && ngaylap.isBefore(_ngay1)) || (_ngay2 != null && ngaylap.isAfter(_ngay2));
             Boolean tienKhongThoa = (_tong1 != -1 && tongtien < _tong1) || (_tong2 != -1 && tongtien > _tong2);

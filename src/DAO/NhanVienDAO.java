@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DAO;
 
-
-
 import DTO.NhanVienDTO;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -33,7 +24,6 @@ public class NhanVienDAO {
                     nv.setGioiTinh(rs.getString("GioiTinh"));
                     nv.setSoDienThoai(rs.getString("SoDienThoai"));
                     nv.setChucVu(rs.getString("ChucVu"));
-                    nv.setTrangThai(rs.getString("TrangThai"));
                     dsnv.add(nv);
                 }
             }
@@ -52,7 +42,6 @@ public class NhanVienDAO {
             qry = qry+","+"'"+nv.getGioiTinh()+"'";
             qry = qry+","+"'"+nv.getSoDienThoai()+"'";
             qry = qry+","+"'"+nv.getChucVu()+"'";
-            qry = qry+","+"'"+nv.getTrangThai()+"'";
             qry = qry+")";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
@@ -84,9 +73,8 @@ public class NhanVienDAO {
     
     public void xoa(String  IDNhanVien){
         try{
-           String qry = "Update nhanvien Set ";
-            qry = qry + "TrangThai=" + "'" + "Ẩn" + "'";
-            qry = qry + " " + "where IDNhanVien='" + IDNhanVien+ "'";
+            String qry = "DELETE FROM nhanvien";
+            qry = qry + " " + "WHERE IDNhanVien = '" + IDNhanVien+ "'";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
             System.out.println(qry);
@@ -95,18 +83,7 @@ public class NhanVienDAO {
             
         }
     }
-    public void xoa(NhanVienDTO nv) {
-        try {
-            String qry = "Update nhanvien Set ";
-            qry = qry + "TrangThai=" + "'" + nv.getTrangThai() + "'";
-            qry = qry + " " + "where IDNhanVien='" + nv.getIDNhanVien() + "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            System.out.println(qry);
-            connection.closeConnect();
-        } catch (Exception e) {
-        }
-    }
+    
 }
 
 

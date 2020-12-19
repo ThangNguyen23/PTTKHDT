@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 import BUS.PhanQuyenBUS;
@@ -20,8 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-//import java.lang.System.Logger;
-//import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,20 +37,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.FontUIResource;
 
-/**
- *
- * @author Nguyen
- */
 public class GUIPhanQuyen extends GUIFormContent{
     public static String array_PhanQuyen[]={"Mã quyền","Tên quyền"};
     public String arrString_Quyen[]={"Quản lý bán hàng","Quản lý nhập hàng",
-        "Quản lý món ăn","Quản lý nguyên liệu",
-        "Quản lý công thức","Quản lý hóa đơn",
-        "Quản lý hóa đơn nhập","Quản lý khuyến mãi",
+        "Quản lý sản phẩm","Quản lý thương hiệu","Quản lý loại dây","Quản lý hóa đơn",
+        "Quản lý hóa đơn nhập",
         "Quản lý khách hàng","Quản lý nhân viên",
         "Quản lý nhà cung cấp","Quản lý tài khoản",
         "Quản lý phân quyền","Quản lý thống kê"};
-    private String arr_listmotaQuyen[]={"QLBanHang","QLNhapHang","QLMonAn","QLNguyenLieu","QLCongThuc","QLHoaDon","QLHDNhap","QLKhuyenMai",
+    private String arr_listmotaQuyen[]={"QLBanHang","QLNhapHang","QLSanPham","QLThuongHieu","QLLoaiDay","QLHoaDon","QLHDNhap",
         "QLKhachHang","QLNhanVien","QLNhaCungCap","QLTaiKhoan","QLPhanQuyen","QLThongKe"};
     private JCheckBox cbPhanQuyen[] = new JCheckBox[arrString_Quyen.length];
     public GUIMyTable table_PhanQuyen;
@@ -123,8 +112,6 @@ public class GUIPhanQuyen extends GUIFormContent{
 
             txt_PhanQuyen_Them[i]=new JTextField();
             txt_PhanQuyen_Them[i].setBounds(200, y, 150, 30);
-            //Tạo nút để lấy tên ảnh 
-            
             y += 40;
             Them_PhanQuyen.add(txt_PhanQuyen_Them[i]);
         }
@@ -140,12 +127,13 @@ public class GUIPhanQuyen extends GUIFormContent{
                 int a=JOptionPane.showConfirmDialog( Them_PhanQuyen,"Bạn chắc chứ ?" ,"",JOptionPane.YES_NO_OPTION);
                 if(a==JOptionPane.YES_OPTION)
                 {
-                    if(checkTextThem(txt_PhanQuyen_Them[1].getText()))
+                    PhanQuyenDTO DTO = new PhanQuyenDTO();
+                             DTO.setIDPhanQuyen(txt_PhanQuyen_Them[0].getText());
+                             DTO.setTenQuyen(txt_PhanQuyen_Them[1].getText());
+                              DTO.setMoTaQuyen(layMoTaTuCheckBox());
+                    if(checkTextThem(DTO.getTenQuyen()))
                     {
-                        PhanQuyenDTO DTO = new PhanQuyenDTO(txt_PhanQuyen_Them[0].getText(),
-                                                  txt_PhanQuyen_Them[1].getText(),
-                                                  layMoTaTuCheckBox(),
-                                                  "Hiện");
+                        
                     
                     BUS.them(DTO);
                     table_PhanQuyen.addRow(DTO);                    
@@ -262,12 +250,14 @@ public class GUIPhanQuyen extends GUIFormContent{
                 int a=JOptionPane.showConfirmDialog( Sua,"Bạn chắc chứ ?" ,"",JOptionPane.YES_NO_OPTION);
                 if(a==JOptionPane.YES_OPTION)
                 {
-                    if(checkTextSua(txt_PhanQuyen_Sua[1].getText()))
+                    PhanQuyenDTO DTO = new PhanQuyenDTO();
+                             DTO.setIDPhanQuyen(txt_PhanQuyen_Sua[0].getText());
+                             DTO.setTenQuyen(txt_PhanQuyen_Sua[1].getText());
+                              DTO.setMoTaQuyen(layMoTaTuCheckBox());
+                    if(checkTextSua(DTO.getTenQuyen()))
                     {
-                        //Chạy hàm để lưu lại việc sửa dữ liệu    
-                    buttonLuu_Sua();
-
-                    Sua.dispose();
+                            buttonLuu_Sua( DTO);
+                            Sua.dispose();
                     }
                 }else
                     cohieu = 0;
@@ -321,7 +311,7 @@ public class GUIPhanQuyen extends GUIFormContent{
         
     }
     //Hàm lưu dữ liệu khi sửa
-    public void buttonLuu_Sua() {
+    public void buttonLuu_Sua(PhanQuyenDTO DTO) {
         int row = table_PhanQuyen.tb.getSelectedRow();
         int colum = table_PhanQuyen.tb.getSelectedColumn();
         String maPhanQuyen = table_PhanQuyen.tbModel.getValueAt(row, colum).toString();
@@ -332,16 +322,9 @@ public class GUIPhanQuyen extends GUIFormContent{
             //model là ruột JTable   
             //set tự động giá trị cho model
             for(int j=0;j<array_PhanQuyen.length;j++)
-                table_PhanQuyen.tbModel.setValueAt(txt_PhanQuyen_Sua[j].getText(), row, j);
-            
+            table_PhanQuyen.tbModel.setValueAt(txt_PhanQuyen_Sua[j].getText(), row, j);
             table_PhanQuyen.tb.setModel(table_PhanQuyen.tbModel);
-
-            
             //Sửa dữ liệu trong database và arraylist trên bus
-            //Tạo đối tượng monAnDTO và truyền dữ liệu trực tiếp thông qua constructor
-            PhanQuyenDTO DTO = new PhanQuyenDTO(txt_PhanQuyen_Sua[0].getText(),
-                                                  txt_PhanQuyen_Sua[1].getText(),
-                                                  layMoTaTuCheckBox());
             //Tìm vị trí của row cần sửa
             int index = PhanQuyenBUS.timViTri(maPhanQuyen);
             //Truyền dữ liệu và vị trí vào bus
@@ -414,9 +397,8 @@ public class GUIPhanQuyen extends GUIFormContent{
     private void LamMoi(){
         table_PhanQuyen.clear();
         for (PhanQuyenDTO DTO : PhanQuyenBUS.dspq) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_PhanQuyen.addRow(DTO);
-            }
+            
         }
     }
     public void docDB() {
@@ -432,10 +414,9 @@ public class GUIPhanQuyen extends GUIFormContent{
         }
         
         for (PhanQuyenDTO DTO : PhanQuyenBUS.dspq) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_PhanQuyen.addRow(DTO);
-                    
-            }
+                   
+            
         }
     }
     @Override

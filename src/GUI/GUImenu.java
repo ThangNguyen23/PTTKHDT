@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đang sửa
 package GUI;
 import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
@@ -25,24 +21,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-/**
- *
- * @author Nguyen
- */
 //class mở đầu khi form đăng nhập được gọi , nơi sườn của cả bài
 public class GUImenu extends JFrame{
     
-    private String arr_listmotaQuyen[]={"QLBanHang","QLNhapHang","QLMonAn","QLNguyenLieu","QLCongThuc","QLHoaDon","QLHDNhap",
-        "QLKhuyenMai","QLKhachHang","QLNhanVien","QLNhaCungCap","QLTaiKhoan","QLPhanQuyen","QLThongKe"};
+    private String arr_listmotaQuyen[]={"QLBanHang","QLNhapHang","QLSanPham","QLThuongHieu","QLLoaiDay","QLHoaDon","QLHDNhap",
+        "QLKhachHang","QLNhanVien","QLNhaCungCap","QLTaiKhoan","QLPhanQuyen","QLThongKe"};
     //Tạo mảng menuleft cho form
-    private String arr_listmenu[]={"Bán hàng","Nhập hàng","Món ăn","Nguyên liệu","Công thức","Hóa đơn","Hóa đơn nhập",
-        "Khuyến mãi","Khách Hàng","Nhân viên","Nhà cung cấp","Tài khoản","Phân quyền","Thống kê"};
+    private String arr_listmenu[]={"Bán hàng","Nhập hàng","Sản phẩm","Hóa đơn","Hóa đơn nhập","Khách Hàng","Nhân viên","Nhà cung cấp","Tài khoản","Phân quyền","Thống kê","Thương hiệu","Loại dây"};
     //Tạo mảng icon cho menuleft
-    private String arr_icon[]={"src/Images/Icon/sell1-30.png","src/Images/Icon/nhaphang-30.png","src/Images/Icon/monan-30.png",
-        "src/Images/Icon/nguyenlieu-30.png","src/Images/Icon/congthuc-30.png","src/Images/Icon/hoadon-30.png",
-        "src/Images/Icon/hoadonnhap-30.png","src/Images/Icon/khuyenmai-30.png","src/Images/Icon/khachhang-30.png",
+    private String arr_icon[]={"src/Images/Icon/sell1-30.png","src/Images/Icon/nhaphang-30.png","src/Images/Icon/icons8-smart-watch-30.png",
+        "src/Images/Icon/hoadon-30.png","src/Images/Icon/hoadonnhap-30.png","src/Images/Icon/khachhang-30.png",
         "src/Images/Icon/nhanvien-30.png","src/Images/Icon/nhacungcap-30.png","src/Images/Icon/taikhoan-30.png",
-        "src/Images/Icon/phanquyen1-30.png","src/Images/Icon/thongke-30.png"};
+        "src/Images/Icon/phanquyen1-30.png","src/Images/Icon/thongke-30.png","src/Images/Icon/icons8-shop-30.png",
+        "src/Images/Icon/nguyenlieu-30.png"};
     //Tạo mảng nhãn cho menuleft
     private JLabel lbl_listmenu[]=new JLabel[arr_listmenu.length];
     //Tạo mảng bảng nhỏ để đặt các icon và nhãn của menuleft
@@ -126,13 +117,13 @@ public class GUImenu extends JFrame{
 //        JPanel menu=new JPanel(new GridLayout(14, 1));
         JPanel menu=new JPanel(null);
         
-        JLabel logo=new JLabel(Tool.showIcon(width_menu, 200, "src/Images/Icon/Logo-Design-removebg-preview.png"));
+        JLabel logo=new JLabel(Tool.showIcon(width_menu, 200, "src/Images/Icon/Rolex-Daytona.png"));
         logo.setBounds(0, 0, width_menu, 200);
         //Sự kiện khi ấn vào logo thì hiện tên 
         logo.addMouseListener(new MouseAdapter(){
             @Override
             public void mousePressed(MouseEvent evt){
-                title.setText("QUẢN LÝ BÁN THỨC ĂN NHANH");
+                title.setText("QUẢN LÝ BÁN ĐỒNG HỒ");
             }
         });
         menu.add(logo);
@@ -237,41 +228,40 @@ public class GUImenu extends JFrame{
                     GUINhapHang NhapHang=new GUINhapHang();
                     pn_content[i]=NhapHang; break;
                 case 2: 
-                    GUIMonAn MonAn=new GUIMonAn();
-                    pn_content[i]=MonAn;    break;                  
+                    GUISanPham MonAn=new GUISanPham();
+                    pn_content[i]=MonAn;    break;
                 case 3:
-                    GUINguyenLieu NguyenLieu=new GUINguyenLieu();
-                    pn_content[i]=NguyenLieu; break;
-                case 4:
-                    GUICongThuc CongThuc=new GUICongThuc();
-                    pn_content[i]=CongThuc; break;
-                case 5:
                     GUIHoaDon HoaDon=new GUIHoaDon();
                     pn_content[i]=HoaDon; break;
-                case 6:
+                case 4:
                     GUIHoaDonNhap HoaDonNhap=new GUIHoaDonNhap();
                     pn_content[i]=HoaDonNhap; break;
-                case 7:
-                    GUIKhuyenMai KhuyenMai=new GUIKhuyenMai();
-                    pn_content[i]=KhuyenMai; break;
-                case 8:
+                case 5:
                     GUIKhachHang KhachHang=new GUIKhachHang();
                     pn_content[i]=KhachHang; break;                        
-                case 9:
+                case 6:
                     GUINhanVien NhanVien=new GUINhanVien();
                     pn_content[i]=NhanVien; break;                
-                case 10:
+                case 7:
                     GUINhaCungCap NhaCungCap=new GUINhaCungCap();
                     pn_content[i]=NhaCungCap; break;              
-                case 11:
+                case 8:
                     GUITaiKhoan TaiKhoan=new GUITaiKhoan();
                     pn_content[i]=TaiKhoan; break;
-                case 12:
+                case 9:
                     GUIPhanQuyen PhanQuyen=new GUIPhanQuyen();
                     pn_content[i]=PhanQuyen; break;
-                case 13:
+                case 10:
                     GUIThongKe ThongKe=new GUIThongKe();
                     pn_content[i]=ThongKe; break;
+//                    GUIPhanQuyen PhanQuyena=new GUIPhanQuyen();
+//                    pn_content[i]=PhanQuyena; break;
+                case 11:
+                    GUIThuongHieu ThuongHieu=new GUIThuongHieu();
+                    pn_content[i]=ThuongHieu; break;
+                case 12:
+                    GUILoaiDay LoaiDay=new GUILoaiDay();
+                    pn_content[i]=LoaiDay; break;
                 
             }
             
@@ -286,7 +276,7 @@ public class GUImenu extends JFrame{
         JPanel header=new JPanel(null);
         header.setBackground(Color.black);
         
-        title=new JLabel("QUẢN LÝ BÁN THỨC ĂN NHANH");
+        title=new JLabel("QUẢN LÝ BÁN ĐỒNG HỒ");
         title.setBounds(width*50/100, 0, 300, 30);
         title.setFont(new Font("Segoe UI", 0, 18));
         title.setForeground(Color.white);

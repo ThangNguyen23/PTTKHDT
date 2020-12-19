@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package BUS;
 
 import DAO.KhachHangDAO;
@@ -12,10 +8,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author HP
- */
 public class KhachHangBUS {
    public static ArrayList<KhachHangDTO> dskh;
    public KhachHangBUS()
@@ -28,6 +20,7 @@ public class KhachHangBUS {
         if(dskh==null) 
             dskh=new ArrayList<KhachHangDTO>();
         dskh =khdata.docDSKH();
+        autosetTongChiTieu();
     }
     public void  them(KhachHangDTO kh)
     {
@@ -58,23 +51,14 @@ public class KhachHangBUS {
         } 
         
     }
-     public void xoa(KhachHangDTO kh,int index) throws SQLException
-    {
-        KhachHangDAO khDao =new KhachHangDAO();
-        String xoakh = dskh.get(index).getIDKhachHang();
-        khDao.xoa(xoakh);
-        if(dskh!=null)
-        dskh.set(index,kh);
-    }
      //Xóa với ID
     public void xoa(String ID, int index) 
     {
         KhachHangDAO data = new KhachHangDAO();
         data.xoa(ID); // update trạng thái lên database
         KhachHangDTO DTO=dskh.get(index); // sửa lại thông tin trong list
-        DTO.setTrangThai("Ẩn");
         if(dskh!=null)
-        dskh.set(index, DTO);
+            dskh.remove(DTO);
     }
     
     //tìm vị trí của thằng có chứa mã mà mình cần
@@ -114,32 +98,19 @@ public class KhachHangBUS {
         }
          return null;
     }
-    public static void TongChiTieu(String makh,float tongtien){
-        try
-        {
-
-           KhachHangDAO khdata=new KhachHangDAO();
-           KhachHangDTO DTO = null;
-           int i=timViTri(makh);
-           if(dskh!=null){
-               DTO=dskh.get(i);
-               DTO.setTongChiTieu(DTO.getTongChiTieu()+tongtien);
-               dskh.set(i, DTO);
-               khdata.sua(DTO);
-           }
-
+    public static float getTongChiTieu(String IDKhachHang){
+        float tong=0;
+        for(int i=0;i<HoaDonBUS.HD.size();i++){
+            if(HoaDonBUS.HD.get(i).getIDKhachHang()==IDKhachHang){
+                tong+=HoaDonBUS.HD.get(i).getThanhTien();
+            }
         }
-        catch (SQLException ex) {
-           Logger.getLogger(KhachHangBUS.class.getName()).log(Level.SEVERE, null, ex);
+        return tong;
+    }
+    private void autosetTongChiTieu(){
+        for(int i=0;i<dskh.size();i++){
+            dskh.get(i).setTongChiTieu(getTongChiTieu(dskh.get(i).getIDKhachHang()));
         }
     }
 }
-
-
-
-
-
-
-
-
 

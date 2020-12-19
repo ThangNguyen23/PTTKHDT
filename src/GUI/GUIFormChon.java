@@ -1,31 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 
 import BUS.ChiTietHoaDonBUS;
 import BUS.ChiTietHoaDonNhapBUS;
-import BUS.ChiTietNguyenLieuBUS;
 import BUS.KhachHangBUS;
-import BUS.KhuyenMaiBUS;
-import BUS.MonAnBUS;
+import BUS.SanPhamBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.ChiTietHoaDonDTO;
 import DTO.ChiTietHoaDonNhapDTO;
-import DTO.ChiTietNguyenLieuDTO;
 import DTO.KhachHangDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.MonAnDTO;
+import DTO.SanPhamDTO;
 import DTO.NhaCungCapDTO;
 import DTO.NhanVienDTO;
 import DTO.PhanQuyenDTO;
-import static GUI.GUIMonAn.array_MonAn;
+import static GUI.GUISanPham.array_SanPham;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,8 +26,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-//import java.lang.System.Logger;
-//import java.lang.System.Logger.Level;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -140,14 +130,10 @@ public class GUIFormChon extends JDialog{
         if(a.equals("Khách hàng"))
         {
             docDBKhachHang();
-        }
-         if(a.equals("Khuyến mãi"))
-        {
-            docDBKhuyenMai();
         }       
-       if(a.equals("Món ăn"))
+       if(a.equals("Sản phẩm"))
         {
-            docDBMonAn();
+            docDBSanPham();
         }
        if(a.equals("Nhân viên"))
        {
@@ -184,17 +170,6 @@ public class GUIFormChon extends JDialog{
             else
                 setVisible(true);
         }
-        if(a.equals("Chi tiết công thức"))
-        {
-            docDBChiTietNguyenLieu(i);
-            //Dùng để rào lại việc không có dữ liệu cần
-            if(Table.tbModel.getRowCount()==0){
-                JOptionPane.showMessageDialog(null, "Công thức này không có chi tiết");
-                setVisible(false);
-            }
-            else
-                setVisible(true);
-        }        
        
     }
     //Hàm tạo nút khi chỉ xem các danh sách chi tiết
@@ -259,9 +234,8 @@ public class GUIFormChon extends JDialog{
                 monAnBus.docDSNCC();            
         }       
         for (NhaCungCapDTO DTO : NhaCungCapBUS.dsncc) {
-            if (DTO.getTrangThai().equals("Hiện")) {
-                Table.addRow(DTO);                    
-            }
+            Table.addRow(DTO);                    
+            
         }
         Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
     }
@@ -273,43 +247,28 @@ public class GUIFormChon extends JDialog{
                 Bus.docDSKH();            
         }       
         for (KhachHangDTO DTO : KhachHangBUS.dskh) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 Table.addRow(DTO);                    
-            }
+            
         }
         Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
     }
-    //Load dữ liệu khuyến mãi lên table
-    public void docDBKhuyenMai() throws Exception {
-        Table.setHeaders(GUIKhuyenMai.array_KhuyenMai);
-        KhuyenMaiBUS Bus = new KhuyenMaiBUS();
-        if(KhuyenMaiBUS.dskm == null) {            
-                Bus.docDSKM();            
-        }       
-        for (KhuyenMaiDTO DTO : KhuyenMaiBUS.dskm) {
-            if (DTO.getTrangThai().equals("Hiện")) {
-                Table.addRow(DTO);                    
-            }
-        }
-        Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
-    }
+    
     //Load dữ liệu món ăn lên table
-    public void docDBMonAn() throws Exception {
-        Table.setHeaders(GUIMonAn.array_MonAn);
-        MonAnBUS Bus = new MonAnBUS();
-        if(MonAnBUS.dsMonAn == null) {            
-                Bus.docDSMonAn();            
+    public void docDBSanPham() throws Exception {
+        Table.setHeaders(GUISanPham.array_SanPham);
+        SanPhamBUS Bus = new SanPhamBUS();
+        if(SanPhamBUS.dsSanPham == null) {            
+                Bus.docDSSanPham();            
         }       
-        for (MonAnDTO DTO : MonAnBUS.dsMonAn) {
-            if (DTO.getTrangThai().equals("Hiện")) {
+        for (SanPhamDTO DTO : SanPhamBUS.dsSanPham) {
                 Table.addRow(DTO);                    
-            }
+            
         }
         Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
     }
     //Load dữ liệu chi tiết hóa đơn lên table
     public void docDBChiTietHoaDon(String i) throws Exception {
-        Table.setHeaders(new String[]{"Mã món ăn","Số lượng","Đơn giá","Thành tiền"});
+        Table.setHeaders(new String[]{"Mã sản phẩm","Số lượng","Đơn giá","Thành tiền"});
         ChiTietHoaDonBUS Bus = new ChiTietHoaDonBUS();
         if(ChiTietHoaDonBUS.cthd == null) {            
                 Bus.docCTHD();            
@@ -318,7 +277,10 @@ public class GUIFormChon extends JDialog{
         for (ChiTietHoaDonDTO DTO : ChiTietHoaDonBUS.cthd) {
             if (DTO.getIDHoaDon().equals(i)) {
                 Tong+=DTO.getThanhTien();
-                Table.addRow(DTO);                    
+                Table.addRow(new String[]{DTO.getIDSanPham(),
+                                            String.valueOf(DTO.getSoLuong()),
+                                            String.valueOf(DTO.getDonGia()),
+                                            String.valueOf(DTO.getThanhTien())});                    
             }
         }
         Table.addRow(new String[]{"","","",""});       
@@ -327,7 +289,7 @@ public class GUIFormChon extends JDialog{
     }
     //Load dữ liệu chi tiết hóa đơn nhập lên table
     public void docDBChiTietHoaDonNhap(String i) throws Exception {
-        Table.setHeaders(new String[]{"Mã nguyên liệu","Số lượng","Giá nhập","Thành tiền"});
+        Table.setHeaders(new String[]{"Mã sản phẩm","Số lượng","Giá nhập","Thành tiền"});
         ChiTietHoaDonNhapBUS Bus = new ChiTietHoaDonNhapBUS();
         if(ChiTietHoaDonNhapBUS.dscthdn == null) {            
                 Bus.docCTHDN();
@@ -336,27 +298,14 @@ public class GUIFormChon extends JDialog{
         for (ChiTietHoaDonNhapDTO DTO : ChiTietHoaDonNhapBUS.dscthdn) {
             if (DTO.getIDHoaDonNhap().equals(i)) {
                 Tong+=DTO.getThanhTien();
-                Table.addRow(DTO);                    
+                Table.addRow(new String[]{DTO.getIDSanPham(),
+                                            String.valueOf(DTO.getSoLuong()),
+                                            String.valueOf(DTO.getGiaNhap()),
+                                            String.valueOf(DTO.getThanhTien())});                        
             }
         }
         Table.addRow(new String[]{"","","",""});       
         Table.addRow(new String[]{"","","Tổng",String.valueOf(Tong)});
-        Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
-    }
-    //Load dữ liệu chi tiết công thức lên table
-    public void docDBChiTietNguyenLieu(String i) throws Exception {
-        Table.setHeaders(new String[]{"Mã nguyên liệu","Số lượng"});
-        ChiTietNguyenLieuBUS Bus = new ChiTietNguyenLieuBUS();
-        if(ChiTietNguyenLieuBUS.dsctnl == null) {
-                Bus.docCTNL();
-        }
-
-        for (ChiTietNguyenLieuDTO DTO : ChiTietNguyenLieuBUS.dsctnl) {
-            if (DTO.getIDCongThuc().equals(i)) {
-                Table.addRow(DTO);
-            }
-        }
-
         Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
     }
     //Load dữ liệu nhân viên lên table
@@ -367,9 +316,8 @@ public class GUIFormChon extends JDialog{
                 Bus.docDSNV();
         }       
         for (NhanVienDTO DTO : NhanVienBUS.dsnv) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 Table.addRow(DTO);                    
-            }
+            
         }
         Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
     }
@@ -381,36 +329,9 @@ public class GUIFormChon extends JDialog{
                 Bus.docDSPQ();
         }       
         for (PhanQuyenDTO DTO : PhanQuyenBUS.dspq) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 Table.addRow(DTO);                    
-            }
+            
         }
         Table.pane.setPreferredSize(new Dimension(GUImenu.width_content*90/100, 300));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

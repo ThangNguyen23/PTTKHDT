@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DAO;
 
 import DTO.PhanQuyenDTO;
@@ -11,10 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Phat
- */
 public class PhanQuyenDAO {
  
     ConnectDB connection = new ConnectDB();
@@ -28,7 +20,6 @@ public class PhanQuyenDAO {
                     pq.setIDPhanQuyen(rs.getString("IDPhanQuyen"));
                     pq.setTenQuyen(rs.getString("TenQuyen"));
                     pq.setMoTaQuyen(rs.getString("MoTaQuyen"));
-                    pq.setTrangThai(rs.getString("TrangThai"));
                     PQ.add(pq);
                 }
             }
@@ -43,7 +34,6 @@ public class PhanQuyenDAO {
             qry = qry + "'" + pq.getIDPhanQuyen()+ "'";
             qry = qry + "," + "'" + pq.getTenQuyen()+ "'";
             qry = qry + "," + "'" + pq.getMoTaQuyen()+ "'";
-            qry = qry + "," + "'" + pq.getTrangThai()+ "'";
             qry = qry + ")";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
@@ -71,28 +61,14 @@ public class PhanQuyenDAO {
     
     public void xoa(String  IDPhanQuyen){
         try{
-           String qry = "Update phanquyen Set ";
-            qry = qry + "TrangThai=" + "'" + "Ẩn"+ "'";
-            qry = qry + "where IDPhanQuyen='" + IDPhanQuyen+ "'";
+            String qry = "DELETE FROM phanquyen";
+            qry = qry + " " + "WHERE IDPhanQuyen = '" + IDPhanQuyen+ "'";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
             System.out.println(qry);
             connection.closeConnect();
         }catch(Exception ex){
             
-        }
-    }
-
-    public void xoa(PhanQuyenDTO pq) {
-    try {
-            String qry = "Update phanquyen Set ";
-            qry = qry + "TrangThai=" + "'" + pq.getTrangThai() + "'";
-            qry = qry + "where IDPhanQuyen='" + pq.getIDPhanQuyen()+ "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            System.out.println(qry);
-            connection.closeConnect();
-        } catch (Exception e) {
         }
     }
 }

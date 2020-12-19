@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package BUS;
 
 import DAO.PhanQuyenDAO;
 import DTO.PhanQuyenDTO;
 import java.util.ArrayList;
 
-/**
- *
- * @author HP
- */
 public class PhanQuyenBUS {
    public static ArrayList<PhanQuyenDTO> dspq;
    public PhanQuyenBUS()
@@ -43,22 +35,14 @@ public class PhanQuyenBUS {
         dspq.set(i,PQDTO);//cập nhật arraylist
         
     }
-     public void xoa(PhanQuyenDTO PQDTO,int index)
-    {
-        PhanQuyenDAO pq = new PhanQuyenDAO();
-        pq.xoa(PQDTO); // update trạng thái lên database
-        if (dspq != null)
-        dspq.set(index, PQDTO); // sửa lại thông tin trong list
-    }
      //Xóa với ID
     public void xoa(String ID, int index) 
     {
         PhanQuyenDAO data = new PhanQuyenDAO();
         data.xoa(ID); // update trạng thái lên database
         PhanQuyenDTO DTO=dspq.get(index); // sửa lại thông tin trong list
-        DTO.setTrangThai("Ẩn");
         if (dspq != null)
-        dspq.set(index, DTO);
+        dspq.remove(DTO);
     }
     
     //tìm vị trí của thằng có chứa mã mà mình cần

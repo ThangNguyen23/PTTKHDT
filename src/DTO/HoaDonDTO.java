@@ -1,54 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DTO;
 
 import java.time.LocalDate;
-
-/**
- *
- * @author Nguyen
- */
 public class HoaDonDTO {
-    private String IDHoaDon,IDNhanVien,IDKhachHang,IDKhuyenMai,TrangThai;
-    private float TienGiamGia,TongTien;
-    private LocalDate NgayLap;
-    public HoaDonDTO(String IDHoaDon, String IDNhanVien, String IDKhachHang, String IDKhuyenMai, LocalDate NgayLap, float TienGiamGia, float TongTien, String TrangThai) {
+    private String IDHoaDon,IDNhanVien,IDKhachHang,TrangThai;
+    private float ThanhTien;
+    private LocalDate NgayBan;
+
+    public HoaDonDTO() {
+    }
+
+    public HoaDonDTO(String IDHoaDon, String IDNhanVien, String IDKhachHang, String TrangThai, float ThanhTien, LocalDate NgayBan) {
         this.IDHoaDon = IDHoaDon;
         this.IDNhanVien = IDNhanVien;
         this.IDKhachHang = IDKhachHang;
-        this.IDKhuyenMai = IDKhuyenMai;
-        this.NgayLap = NgayLap;
         this.TrangThai = TrangThai;
-        this.TienGiamGia = TienGiamGia;
-        this.TongTien = TongTien;
+        this.ThanhTien = ThanhTien;
+        this.NgayBan = NgayBan;
     }
 
-    public HoaDonDTO(String IDHoaDon, String IDNhanVien, String IDKhachHang, String IDKhuyenMai, LocalDate NgayLap, float TienGiamGia, float TongTien) {
-        this.IDHoaDon = IDHoaDon;
-        this.IDNhanVien = IDNhanVien;
-        this.IDKhachHang = IDKhachHang;
-        this.IDKhuyenMai = IDKhuyenMai;
-        this.TienGiamGia = TienGiamGia;
-        this.TongTien = TongTien;
-        this.NgayLap = NgayLap;
-    }
-    
-    public HoaDonDTO()
-    {
-        
-    }
-
-    public String getTrangThai() {
-        return TrangThai;
-    }
-
-    public void setTrangThai(String TrangThai) {
-        this.TrangThai = TrangThai;
-    }
-    
     public String getIDHoaDon() {
         return IDHoaDon;
     }
@@ -73,53 +43,28 @@ public class HoaDonDTO {
         this.IDKhachHang = IDKhachHang;
     }
 
-    public String getIDKhuyenMai() {
-        return IDKhuyenMai;
+    public String getTrangThai() {
+        return TrangThai;
     }
 
-    public void setIDKhuyenMai(String IDKhuyenMai) {
-        this.IDKhuyenMai = IDKhuyenMai;
+    public void setTrangThai(String TrangThai) {
+        this.TrangThai = TrangThai;
     }
 
-    public LocalDate getNgayLap() {
-        return NgayLap;
+    public float getThanhTien() {
+        return ThanhTien;
     }
 
-    public void setNgayLap(LocalDate NgayLap) {
-        this.NgayLap = NgayLap;
+    public void setThanhTien(float ThanhTien) {
+        this.ThanhTien = ThanhTien;
     }
 
-    public float getTienGiamGia() {
-        return TienGiamGia;
+    public LocalDate getNgayBan() {
+        return NgayBan;
     }
 
-    public void setTienGiamGia(float TienGiamGia) {
-        this.TienGiamGia = TienGiamGia;
+    public void setNgayBan(LocalDate NgayBan) {
+        this.NgayBan = NgayBan;
     }
-
-    public float getTongTien() {
-        return TongTien;
-    }
-
-    public void setTongTien(float TongTien) {
-        this.TongTien = TongTien;
-    }
-
-   
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

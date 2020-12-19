@@ -1,3 +1,4 @@
+//Đã sủa
 package DAO;
 
 import java.sql.Connection;
@@ -11,7 +12,7 @@ import javax.swing.JOptionPane;
 
 public class ConnectDB {
     private  String hostName = "localhost";
-    private  String dbName = "banthucannhanh";
+    private  String dbName = "webbandongho";
     private  String userName = "root";
     private  String password = "";
     private Connection connect;

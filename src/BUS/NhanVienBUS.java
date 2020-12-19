@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package BUS;
 
 import DAO.NhanVienDAO;
@@ -11,10 +7,6 @@ import DTO.NhanVienDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author HP
- */
 public class NhanVienBUS {
    public static ArrayList<NhanVienDTO> dsnv;
    public NhanVienBUS()
@@ -56,23 +48,14 @@ public class NhanVienBUS {
         } 
         
     }
-    public void xoa(NhanVienDTO nv,int index)
-    {
-        NhanVienDAO nvDao =new NhanVienDAO();
-        String xoanv = dsnv.get(index).getIDNhanVien();
-        nvDao.xoa(xoanv);
-        if(dsnv!=null)
-        dsnv.set(index,nv);
-    }
     //Xóa với ID
     public void xoa(String ID, int index) 
     {
         NhanVienDAO data = new NhanVienDAO();
         data.xoa(ID); // update trạng thái lên database
         NhanVienDTO DTO=dsnv.get(index); // sửa lại thông tin trong list
-        DTO.setTrangThai("Ẩn");
         if(dsnv!=null)
-        dsnv.set(index, DTO);
+        dsnv.remove(DTO);
     }
     
     //tìm vị trí của thằng có chứa mã mà mình cần

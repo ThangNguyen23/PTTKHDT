@@ -17,9 +17,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class mainGUI {
     public static void main(String args[]) throws Exception{
         //Hàm đọc tất cả dữ liệu
-        Tool.docDB();
-        //chạy form đăng nhập
-        new LoginGUI().setVisible(true);
+        if(Tool.docDB())
+            //chạy form đăng nhập
+            new LoginGUI().setVisible(true);
         
     }
 }

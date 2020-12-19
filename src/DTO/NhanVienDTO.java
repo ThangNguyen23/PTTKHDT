@@ -1,27 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DTO;
-
-/**
- *
- * @author Nguyen
- */
 public class NhanVienDTO {
-    private String IDNhanVien,HoNhanVien,TenNhanVien,Gmail,GioiTinh,SoDienThoai,ChucVu,TrangThai;
-    public NhanVienDTO(String IDNhanVien,String HoNhanVien,String TenNhanVien,String Gmail,String GioiTinh,String SoDienThoai,String ChucVu){
-        this.IDNhanVien = IDNhanVien;
-        this.HoNhanVien = HoNhanVien;
-        this.TenNhanVien = TenNhanVien;
-        this.Gmail = Gmail;
-        this.GioiTinh = GioiTinh;
-        this.SoDienThoai = SoDienThoai;
-        this.ChucVu = ChucVu;      
+    private String IDNhanVien,HoNhanVien,TenNhanVien,Gmail,GioiTinh,SoDienThoai,ChucVu;
+
+    public NhanVienDTO() {
     }
 
-    public NhanVienDTO(String IDNhanVien, String HoNhanVien, String TenNhanVien, String Gmail, String GioiTinh, String SoDienThoai, String ChucVu, String TrangThai) {
+    public NhanVienDTO(String IDNhanVien, String HoNhanVien, String TenNhanVien, String Gmail, String GioiTinh, String SoDienThoai, String ChucVu) {
         this.IDNhanVien = IDNhanVien;
         this.HoNhanVien = HoNhanVien;
         this.TenNhanVien = TenNhanVien;
@@ -29,13 +14,8 @@ public class NhanVienDTO {
         this.GioiTinh = GioiTinh;
         this.SoDienThoai = SoDienThoai;
         this.ChucVu = ChucVu;
-        this.TrangThai = TrangThai;
     }
 
-    public NhanVienDTO(){
-        
-    }
-    
     public String getIDNhanVien() {
         return IDNhanVien;
     }
@@ -91,13 +71,7 @@ public class NhanVienDTO {
     public void setChucVu(String ChucVu) {
         this.ChucVu = ChucVu;
     }
-    public String getTrangThai() {
-        return TrangThai;
-    }
-
-    public void setTrangThai(String TrangThai) {
-        this.TrangThai = TrangThai;
-    }
+        
 }
 
 

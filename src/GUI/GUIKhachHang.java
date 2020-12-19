@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package GUI;
 
 import BUS.KhachHangBUS;
@@ -19,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -47,7 +42,7 @@ import javax.swing.plaf.FontUIResource;
  */
 public class GUIKhachHang extends GUIFormContent {
 
-    public static String array_KhachHang[] = {"Mã khách hàng", "Họ", "Tên", "Gmail", "Giới tính", "SĐT", "Tổng chi tiêu"};
+    public static String array_KhachHang[] = {"Mã khách hàng", "Họ", "Tên",  "Địa chỉ", "SĐT"};
     public GUIMyTable table_KhachHang;
     private static JDialog Them_KhachHang;
     private static JDialog Sua;
@@ -62,8 +57,6 @@ public class GUIKhachHang extends GUIFormContent {
     private int cohieu = 0;
     private KhachHangBUS BUS = new KhachHangBUS();
     private JTextField Ten,Tu_ChiTieu,Den_ChiTieu;
-    private JComboBox cbGioiTinh_Them,cbGioiTinh_Sua;
-    private String array_GioiTinh[]={"Nam","Nữ"};
     public GUIKhachHang() {
         super();
     }
@@ -109,15 +102,6 @@ public class GUIKhachHang extends GUIFormContent {
             label_KhachHang[i] = new JLabel(array_KhachHang[i]);
             label_KhachHang[i].setBounds(100, y, 100, 30);
             Them_KhachHang.add(label_KhachHang[i]);
-            //Tạo combobox
-            if(i==4)
-            {
-                cbGioiTinh_Them=new JComboBox(array_GioiTinh);
-                cbGioiTinh_Them.setBounds(200, y, 150, 30);
-                Them_KhachHang.add(cbGioiTinh_Them);
-                y+=40;
-                continue;
-            }
             txt_KhachHang_Them[i] = new JTextField();
             txt_KhachHang_Them[i].setBounds(200, y, 150, 30);
             //Tạo nút để lấy tên ảnh 
@@ -125,7 +109,6 @@ public class GUIKhachHang extends GUIFormContent {
             y += 40;
             Them_KhachHang.add(txt_KhachHang_Them[i]);
         }
-        txt_KhachHang_Them[6].setText("0");
         //Tạo nút lưu
         JButton Luu = new JButton("Lưu");
         Luu.setBackground(Color.decode("#90CAF9"));
@@ -137,21 +120,16 @@ public class GUIKhachHang extends GUIFormContent {
                 cohieu =1;
                 int a = JOptionPane.showConfirmDialog(Them_KhachHang, "Bạn chắc chứ ?", "", JOptionPane.YES_NO_OPTION);
                 if (a == JOptionPane.YES_OPTION) {
-                    if(checkTextThem(txt_KhachHang_Them[1].getText(),
-                            txt_KhachHang_Them[2].getText(),
-                            txt_KhachHang_Them[3].getText(), 
-                            cbGioiTinh_Them.getSelectedItem().toString(),
-                            txt_KhachHang_Them[5].getText(),
-                            txt_KhachHang_Them[6].getText()))
+                    KhachHangDTO DTO = new KhachHangDTO();
+                            DTO.setIDKhachHang(txt_KhachHang_Them[0].getText());
+                            DTO.setHoKhachHang(txt_KhachHang_Them[1].getText());
+                            DTO.setTenKhachHang(txt_KhachHang_Them[2].getText());
+                            DTO.setDiaChiNhanHang(txt_KhachHang_Them[3].getText());
+                            DTO.setSoDienThoai(txt_KhachHang_Them[4].getText());
+                            
+                    if(checkTextThem(DTO))
                     {
-                        KhachHangDTO DTO = new KhachHangDTO(txt_KhachHang_Them[0].getText(),
-                            txt_KhachHang_Them[1].getText(),
-                            txt_KhachHang_Them[2].getText(),
-                            txt_KhachHang_Them[3].getText(),
-                            cbGioiTinh_Them.getSelectedItem().toString(),
-                            txt_KhachHang_Them[5].getText(),
-                            Float.parseFloat(txt_KhachHang_Them[6].getText()),
-                            "Hiện");
+                        
 
                     BUS.them(DTO); //thêm khách hàng bên BUS đã có thêm vào database
                     table_KhachHang.addRow(DTO);
@@ -170,7 +148,6 @@ public class GUIKhachHang extends GUIFormContent {
                     cohieu=0;
             }
         });
-        txt_KhachHang_Them[6].setEditable(false);
         Them_KhachHang.add(Luu);
         //Tạo nút thoát
         JButton Thoat = new JButton("Thoát");
@@ -234,15 +211,6 @@ public class GUIKhachHang extends GUIFormContent {
             label_KhachHang[i] = new JLabel(array_KhachHang[i]);
             label_KhachHang[i].setBounds(100, y, 100, 30);
             Sua.add(label_KhachHang[i]);
-            //Tạo combobox
-            if(i==4)
-            {
-                cbGioiTinh_Sua=new JComboBox(array_GioiTinh);
-                cbGioiTinh_Sua.setBounds(200, y, 150, 30);
-                Sua.add(cbGioiTinh_Sua);
-                y+=40;
-                continue;
-            }
             txt_KhachHang_Sua[i] = new JTextField();
             txt_KhachHang_Sua[i].setBounds(200, y, 150, 30);
 
@@ -259,15 +227,16 @@ public class GUIKhachHang extends GUIFormContent {
                 cohieu =1;
                 int a = JOptionPane.showConfirmDialog(Sua, "Bạn chắc chứ ?", "", JOptionPane.YES_NO_OPTION);
                 if (a == JOptionPane.YES_OPTION) {
-                    if(checkTextSua(txt_KhachHang_Sua[1].getText(),
-                            txt_KhachHang_Sua[2].getText(),
-                            txt_KhachHang_Sua[3].getText(),
-                            cbGioiTinh_Sua.getSelectedItem().toString(),
-                            txt_KhachHang_Sua[5].getText(),
-                            txt_KhachHang_Sua[6].getText()))
+                    KhachHangDTO DTO = new KhachHangDTO();
+                            DTO.setIDKhachHang(txt_KhachHang_Them[0].getText());
+                            DTO.setHoKhachHang(txt_KhachHang_Them[1].getText());
+                            DTO.setTenKhachHang(txt_KhachHang_Them[2].getText());
+                            DTO.setDiaChiNhanHang(txt_KhachHang_Them[3].getText());
+                            DTO.setSoDienThoai(txt_KhachHang_Them[4].getText());
+                    if(checkTextSua(DTO))
                     {
                         //Chạy hàm để lưu lại việc sửa dữ liệu    
-                    buttonLuu_Sua();
+                    buttonLuu_Sua(DTO);
                     
                     Sua.dispose();
                     }
@@ -277,7 +246,6 @@ public class GUIKhachHang extends GUIFormContent {
 
             }
         });
-        txt_KhachHang_Sua[6].setEditable(false);
         Sua.add(Luu);
 
         JButton Thoat = new JButton("Thoát");
@@ -308,7 +276,7 @@ public class GUIKhachHang extends GUIFormContent {
     }
 
     //Hàm lưu dữ liệu khi sửa
-    public void buttonLuu_Sua() {
+    public void buttonLuu_Sua(KhachHangDTO DTO) {
         int row = table_KhachHang.tb.getSelectedRow();
         int colum = table_KhachHang.tb.getSelectedColumn();
         String maKhachHang = table_KhachHang.tbModel.getValueAt(row, colum).toString();
@@ -319,23 +287,13 @@ public class GUIKhachHang extends GUIFormContent {
             //model là ruột JTable   
             //set tự động giá trị cho model
             for (int j = 0; j < array_KhachHang.length; j++) {
-                if(j!=4)
                     table_KhachHang.tbModel.setValueAt(txt_KhachHang_Sua[j].getText(), row, j);
-                else if(j==4)
-                    table_KhachHang.tbModel.setValueAt(cbGioiTinh_Sua.getSelectedItem().toString(), row, j);
             }
 
             table_KhachHang.tb.setModel(table_KhachHang.tbModel);
 
             //Sửa dữ liệu trong database và arraylist trên bus
-            //Tạo đối tượng monAnDTO và truyền dữ liệu trực tiếp thông qua constructor
-            KhachHangDTO DTO = new KhachHangDTO(txt_KhachHang_Sua[0].getText(),
-                    txt_KhachHang_Sua[1].getText(),
-                    txt_KhachHang_Sua[2].getText(),
-                    txt_KhachHang_Sua[3].getText(),
-                    cbGioiTinh_Sua.getSelectedItem().toString(),
-                    txt_KhachHang_Sua[5].getText(),
-                    Float.parseFloat(txt_KhachHang_Sua[6].getText()));
+            
             //Tìm vị trí của row cần sửa
             int index = KhachHangBUS.timViTri(maKhachHang);
             //Truyền dữ liệu và vị trí vào bus
@@ -362,16 +320,8 @@ public class GUIKhachHang extends GUIFormContent {
             txt_KhachHang_Sua[0].setEnabled(false);
             //Set tự động giá trị các field
             for (int j = 0; j < array_KhachHang.length; j++) {
-               if(j!=4)
                     txt_KhachHang_Sua[j].setText(table_KhachHang.tb.getValueAt(i, j).toString());
-                else if(j==4)
-                {
-                    int k;
-                    for(k=0;k<array_GioiTinh.length;k++)
-                        if(table_KhachHang.tb.getValueAt(i, j).toString().equals(array_GioiTinh[k]))
-                            cbGioiTinh_Sua.setSelectedIndex(k);
-                }
-
+               
             }
 
         }
@@ -405,16 +355,15 @@ public class GUIKhachHang extends GUIFormContent {
             try {
                 Bus.docDSKH();
             } catch (Exception ex) {
-                Logger.getLogger(GUIMonAn.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GUISanPham.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         }
 
         for (KhachHangDTO KhachHang : KhachHangBUS.dskh) {
-            if (KhachHang.getTrangThai().equals("Hiện")) {
                 table_KhachHang.addRow(KhachHang);
 
-            }
+            
         }
 
     }
@@ -511,9 +460,8 @@ JPanel TimKiem=new JPanel(null);
     private void LamMoi() {
         table_KhachHang.clear();
         for (KhachHangDTO DTO : KhachHangBUS.dskh) {
-            if (DTO.getTrangThai().equals("Hiện")) {
                 table_KhachHang.addRow(DTO);
-            }
+            
         }
     }
 
@@ -588,55 +536,40 @@ JPanel TimKiem=new JPanel(null);
 
     }
 
-    public boolean checkTextThem(String hoKhachHang, String tenKhachHang, String gmail, String gioiTinh, String soDienThoai, String tongChiTieu) {
+    public boolean checkTextThem(KhachHangDTO DTO) {
         UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Segoe UI", 0, 20)));
-        if (hoKhachHang.equals("")
-                || tenKhachHang.equals("")
-                || gmail.equals("")
-                || gioiTinh.equals("")
-                || soDienThoai.equals("")
-                || tongChiTieu.equals("")) {
+        if (DTO.getHoKhachHang().equals("")
+                || DTO.getTenKhachHang().equals("")
+                || DTO.getDiaChiNhanHang().equals("")
+                || DTO.getSoDienThoai().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-        } else if (!Tool.isName(Tool.removeAccent(hoKhachHang))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getHoKhachHang()))) {
             JOptionPane.showMessageDialog(null, "Họ khách hàng không được chứa ký tự đặc biệt");
             txt_KhachHang_Them[1].requestFocus();
-        } else if (!Tool.isLength50(hoKhachHang)) {
+        } else if (!Tool.isLength50(DTO.getHoKhachHang())) {
             JOptionPane.showMessageDialog(null, "Họ khách hàng không được quá 50 ký tự");
             txt_KhachHang_Them[1].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(tenKhachHang))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getTenKhachHang()))) {
             JOptionPane.showMessageDialog(null, "Tên khách hàng không được chứa ký tự đặc biệt");
             txt_KhachHang_Them[2].requestFocus();
-        } else if (!Tool.isLength50(tenKhachHang)) {
+        } else if (!Tool.isLength50(DTO.getTenKhachHang())) {
             JOptionPane.showMessageDialog(null, "Tên khách hàng không được quá 50 ký tự");
             txt_KhachHang_Them[2].requestFocus();
-        }else if (Tool.haveSpace(tenKhachHang.trim())) {
+        }else if (Tool.haveSpace(DTO.getTenKhachHang().trim())) {
             JOptionPane.showMessageDialog(null, "Tên khách hàng không được quá 2 từ");
             txt_KhachHang_Them[2].requestFocus();
-        }
-        else if (!Tool.isGmail(gmail)) {
-            JOptionPane.showMessageDialog(null, "Gmail phải đúng định dạng và không được chứa ký tự đặc biệt ");
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getDiaChiNhanHang()))) {
+            JOptionPane.showMessageDialog(null, "Địa chỉ không được chứa ký tự đặc biệt");
             txt_KhachHang_Them[3].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(gioiTinh))) {
-            JOptionPane.showMessageDialog(null, "Giới tính không được chứa ký tự đặc biệt");
-            txt_KhachHang_Them[4].requestFocus();
-        } else if (!Tool.isLength50(gioiTinh)) {
-            JOptionPane.showMessageDialog(null, "Giới tính không được quá 50 ký tự");
-            txt_KhachHang_Them[4].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(soDienThoai))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getSoDienThoai()))) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được chứa ký tự đặc biệt");
-            txt_KhachHang_Them[5].requestFocus();
-        } else if (!Tool.isLength50(soDienThoai)) {
+            txt_KhachHang_Them[4].requestFocus();
+        } else if (!Tool.isLength50(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được quá 50 ký tự");
-            txt_KhachHang_Them[5].requestFocus();
-        } else if (!Tool.isPhoneNumber(soDienThoai)) {
+            txt_KhachHang_Them[4].requestFocus();
+        } else if (!Tool.isPhoneNumber(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không chính xác");
-            txt_KhachHang_Them[5].requestFocus();
-        } else if (!Tool.isTongTien(Tool.removeAccent(tongChiTieu))) {
-            JOptionPane.showMessageDialog(null, "Tổng chi tiêu không được chứa ký tự đặc biệt");
-            txt_KhachHang_Them[6].requestFocus();
-        } else if (!Tool.isNumber(tongChiTieu)) {
-            JOptionPane.showMessageDialog(null, "Tổng chi tiêu phải là số nguyên dương");
-            txt_KhachHang_Them[6].requestFocus();
+            txt_KhachHang_Them[4].requestFocus();
         } else {
             return true;
 
@@ -644,55 +577,40 @@ JPanel TimKiem=new JPanel(null);
         return false;
     }
     
-    public boolean checkTextSua(String hoKhachHang, String tenKhachHang, String gmail, String gioiTinh, String soDienThoai, String tongChiTieu) {
+    public boolean checkTextSua(KhachHangDTO DTO) {
         UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("Segoe UI", 0, 20)));
-        if (hoKhachHang.equals("")
-                || tenKhachHang.equals("")
-                || gmail.equals("")
-                || gioiTinh.equals("")
-                || soDienThoai.equals("")
-                || tongChiTieu.equals("")) {
+        if (DTO.getHoKhachHang().equals("")
+                || DTO.getTenKhachHang().equals("")
+                || DTO.getDiaChiNhanHang().equals("")
+                || DTO.getSoDienThoai().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-        } else if (!Tool.isName(Tool.removeAccent(hoKhachHang))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getHoKhachHang()))) {
             JOptionPane.showMessageDialog(null, "Họ khách hàng không được chứa ký tự đặc biệt");
             txt_KhachHang_Sua[1].requestFocus();
-        } else if (!Tool.isLength50(hoKhachHang)) {
+        } else if (!Tool.isLength50(DTO.getHoKhachHang())) {
             JOptionPane.showMessageDialog(null, "Họ khách hàng không được quá 50 ký tự");
             txt_KhachHang_Sua[1].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(tenKhachHang))) {
+        } else if (!Tool.isName(Tool.removeAccent(DTO.getTenKhachHang()))) {
             JOptionPane.showMessageDialog(null, "Tên khách hàng không được chứa ký tự đặc biệt");
             txt_KhachHang_Sua[2].requestFocus();
-        } else if (!Tool.isLength50(tenKhachHang)) {
+        } else if (!Tool.isLength50(DTO.getTenKhachHang())) {
             JOptionPane.showMessageDialog(null, "Tên khách hàng không được quá 50 ký tự");
             txt_KhachHang_Sua[2].requestFocus();
-        }else if (Tool.haveSpace(tenKhachHang.trim())) {
+        }else if (Tool.haveSpace(DTO.getTenKhachHang().trim())) {
             JOptionPane.showMessageDialog(null, "Tên khách hàng không được quá 2 từ");
             txt_KhachHang_Sua[2].requestFocus();
-        } 
-        else if (!Tool.isGmail(gmail)) {
-            JOptionPane.showMessageDialog(null, "Gmail phải đúng định dạng và không được chứa ký tự đặc biệt ");
+        }else if (!Tool.isName(Tool.removeAccent(DTO.getDiaChiNhanHang()))) {
+            JOptionPane.showMessageDialog(null, "Địa chỉ không được chứa ký tự đặc biệt");
             txt_KhachHang_Sua[3].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(gioiTinh))) {
-            JOptionPane.showMessageDialog(null, "Giới tính không được chứa ký tự đặc biệt");
-            txt_KhachHang_Sua[4].requestFocus();
-        } else if (!Tool.isLength50(gioiTinh)) {
-            JOptionPane.showMessageDialog(null, "Giới tính không được quá 50 ký tự");
-            txt_KhachHang_Sua[4].requestFocus();
-        } else if (!Tool.isName(Tool.removeAccent(soDienThoai))) {
+        }   else if (!Tool.isName(Tool.removeAccent(DTO.getSoDienThoai()))) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được chứa ký tự đặc biệt");
-            txt_KhachHang_Sua[5].requestFocus();
-        } else if (!Tool.isLength50(soDienThoai)) {
+            txt_KhachHang_Sua[4].requestFocus();
+        } else if (!Tool.isLength50(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được quá 50 ký tự");
-            txt_KhachHang_Sua[5].requestFocus();
-        } else if (!Tool.isPhoneNumber(soDienThoai)) {
+            txt_KhachHang_Sua[4].requestFocus();
+        } else if (!Tool.isPhoneNumber(DTO.getSoDienThoai())) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không chính xác");
-            txt_KhachHang_Sua[5].requestFocus();
-        } else if (!Tool.isTongTien(Tool.removeAccent(tongChiTieu))) {
-            JOptionPane.showMessageDialog(null, "Tổng chi tiêu không được chứa ký tự đặc biệt");
-            txt_KhachHang_Sua[6].requestFocus();
-        } else if (!Tool.isNumber(tongChiTieu)) {
-            JOptionPane.showMessageDialog(null, "Tổng chi tiêu phải là số nguyên dương");
-            txt_KhachHang_Sua[6].requestFocus();
+            txt_KhachHang_Sua[4].requestFocus();
         } else {
             return true;
 

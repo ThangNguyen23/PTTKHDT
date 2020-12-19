@@ -1,4 +1,4 @@
-//main
+//Đã sửa
 package DAO;
 
 import DTO.*;
@@ -19,18 +19,16 @@ public class HoaDonDAO {
         connection = new ConnectDB();
         ArrayList<HoaDonDTO> HD = new ArrayList<>();
         try {
-            String qry = "SELECT * FROM hoadon";
+            String qry = "SELECT * FROM hoadonban";
             ResultSet result = connection.excuteQuery(qry);
             if (result != null) {
                 while (result.next()) {
                     HoaDonDTO hd = new HoaDonDTO();
-                    hd.setIDHoaDon(result.getString("IDHoaDon"));
+                    hd.setIDHoaDon(result.getString("IDHoaDonBan"));
                     hd.setIDNhanVien(result.getString("IDNhanVien"));
                     hd.setIDKhachHang(result.getString("IDKhachHang"));
-                    hd.setIDKhuyenMai(result.getString("IDKhuyenMai"));
-                    hd.setNgayLap(result.getDate("NgayLap").toLocalDate());
-                    hd.setTienGiamGia(result.getFloat("TienGiamGia"));
-                    hd.setTongTien(result.getFloat("TongTien"));
+                    hd.setThanhTien(result.getFloat("ThanhTien"));
+                    hd.setNgayBan(result.getDate("NgayBan").toLocalDate());
                     hd.setTrangThai(result.getString("TrangThai"));
                     HD.add(hd);
                 }
@@ -43,14 +41,12 @@ public class HoaDonDAO {
 
     public void them(HoaDonDTO HD) { //cần ghi lại khi qua class khác
         try {
-            String qry = "INSERT INTO hoadon values (";
+            String qry = "INSERT INTO hoadonban values (";
             qry = qry + "'" + HD.getIDHoaDon()+ "'";
-            qry = qry + "," + "'" + HD.getIDNhanVien()+ "'";
             qry = qry + "," + "'" + HD.getIDKhachHang()+ "'";
-            qry = qry + "," + "'" + HD.getIDKhuyenMai()+ "'";
-            qry = qry + "," + "'" + HD.getNgayLap()+ "'";
-            qry = qry + "," + "'" + HD.getTienGiamGia()+ "'";
-            qry = qry + "," + "'" + HD.getTongTien()+ "'";
+            qry = qry + "," + "'" + HD.getIDNhanVien()+ "'";
+            qry = qry + "," + "'" + HD.getThanhTien()+ "'";
+            qry = qry + "," + "'" + HD.getNgayBan()+ "'";
             qry = qry + "," + "'" + HD.getTrangThai()+ "'";
             qry = qry + ")";
             connection.getStatement();
@@ -60,64 +56,34 @@ public class HoaDonDAO {
         } catch (Exception ex) {
         }
     }
-    
-    public void xoa(String IDHoaDon) { 
-        try {
-            String qry = "Update hoadon Set ";
-            qry = qry + "TrangThai=" + "'" + "Ẩn" + "'";
-            qry = qry + " " + "where IDHoaDon='" + IDHoaDon+ "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            connection.closeConnect();
-        } catch (Exception ex) {
-
-        }
-    }
-
-    public void xoa(HoaDonDTO HD) {
-        try {
-            String qry = "Update hoadon Set ";
-            qry = qry + "TrangThai=" + "'" + HD.getTrangThai() + "'";
-            qry = qry + " " + "where IDHoaDon='" + HD.getIDHoaDon()+ "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            System.out.println(qry);
-            connection.closeConnect();
-        } catch (Exception e) {
-        }
-    }
-
     public void sua(HoaDonDTO HD) { //cần ghi lại khi qua class khác
         try {
-            String qry = "Update hoadon Set ";
+            String qry = "Update hoadonban Set ";
             qry = qry + "IDNhanVien=" + "'" + HD.getIDNhanVien()+ "'";
             qry = qry + ",IDKhachHang=" + "'" + HD.getIDKhachHang()+ "'";
-            qry = qry + ",IDKhuyenMai=" + "'" + HD.getIDKhuyenMai()+ "'";
-            qry = qry + ",NgayLap=" + "'" + HD.getNgayLap()+ "'";
-            qry = qry + ",TienGiamGia=" + "'" + HD.getTienGiamGia()+ "'";
-            qry = qry + ",TongTien=" + "'" + HD.getTongTien()+ "'";
-            qry = qry+" "+" WHERE IDHoaDon=' "+HD.getIDHoaDon()+"'";
+            qry = qry + ",ThanhTien=" + "'" + HD.getThanhTien()+ "'";
+            qry = qry + ",NgayBan=" + "'" + HD.getNgayBan()+ "'";
+            qry = qry + ",TrangThai=" + "'" + HD.getTrangThai()+ "'";
+            qry = qry+" "+" WHERE IDHoaDonBan=' "+HD.getIDHoaDon()+"'";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
             System.out.println(qry);
             connection.closeConnect();
 
         } catch (Exception ex) {
+        }
+    }
+    public void xoa(String IDHoaDon) { 
+        try {
+            String qry = "DELETE FROM hoadonban";
+            qry = qry + " " + "WHERE IDHoaDon = '" + IDHoaDon+ "'";
+            connection.getStatement();
+            connection.ExecuteUpdate(qry);
+            System.out.println(qry);
+            connection.closeConnect();
+        } catch (Exception ex) {
+
         }
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đang sửa , còn phần tiền của hóa đơn bán nhập , chi tiêu khách hàng
 package BUS;
 import DTO.*;
 import GUI.*;
@@ -25,10 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
-/**
- *
- * @author Nguyen
- */
+
 public class Tool {
 
     public static String IDNhanVienHienHanh = "";
@@ -83,11 +76,11 @@ public static boolean isGmail(String gmail)
         return false;
     }
     
-    public static boolean isTenThousandToOneMil(String donGia)
+    public static boolean isTenThousandToOneBil(String donGia)
     {
         try
         {
-            if(Integer.parseInt(donGia) > 1000000 || Integer.parseInt(donGia) < 10000)
+            if(Integer.parseInt(donGia) > 1000000000 || Integer.parseInt(donGia) < 10000)
             {
                 return false;
             }
@@ -141,7 +134,7 @@ public static boolean isGmail(String gmail)
     
     public static boolean isName(String name)
     {
-        Pattern pattern = Pattern.compile("[^a-zA-Z0-9 ]");
+        Pattern pattern = Pattern.compile("[^a-zA-Z0-9 -_]");
         Matcher matcher = pattern.matcher(name);
         if (matcher.find()) {
             return false;
@@ -211,11 +204,11 @@ public static boolean isGmail(String gmail)
         return string;
     }
 
-    public static boolean isDuplicateMaMonAn(String string ) //kiểm tra trùng nhau hay không
+    public static boolean isDuplicateMaSanPham(String string ) //kiểm tra trùng nhau hay không
     {
-        for(int i=0;i< MonAnBUS.dsMonAn.size();i++ )
+        for(int i=0;i< SanPhamBUS.dsSanPham.size();i++ )
         {
-           if(MonAnBUS.dsMonAn.get(i).getIDMonAn().contains(string))
+           if(SanPhamBUS.dsSanPham.get(i).getIDSanPham().contains(string))
                return true;
         }
         return false;
@@ -225,7 +218,7 @@ public static boolean isGmail(String gmail)
     {
         for(int i=0;i< NhanVienBUS.dsnv.size();i++ )
         {
-           if(NhanVienBUS.dsnv.get(i).getIDNhanVien().contains(string) && NhanVienBUS.dsnv.get(i).getTrangThai().equals("Hiện"))
+           if(NhanVienBUS.dsnv.get(i).getIDNhanVien().contains(string))
                return true;
         }
         return false;
@@ -294,22 +287,22 @@ public static boolean isGmail(String gmail)
         }
         return sb.toString();
     }
-    public static ArrayList<MonAnDTO> searchMA(String value, double donGiaTu, double donGiaDen, int soLuongTu, int soLuongDen) { //có thay đổi
+    public static ArrayList<SanPhamDTO> searchMA(String value, double donGiaTu, double donGiaDen, int soLuongTu, int soLuongDen) { //có thay đổi
         // phương pháp tìm từ arraylist
-        ArrayList<MonAnDTO> result = new ArrayList<>();
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
         //Tìm theo tên
-        MonAnBUS.dsMonAn.forEach((MonAnDTO) -> {
-            if ( MonAnDTO.getTenMonAn().toLowerCase().contains(value.toLowerCase()) && MonAnDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                || removeAccent(MonAnDTO.getTenMonAn().toLowerCase()).contains(removeAccent(value.toLowerCase())) && MonAnDTO.getTrangThai().equals("Hiện") )//Tìm kiếm theo chữ VN
+        SanPhamBUS.dsSanPham.forEach((SanPhamDTO) -> {
+            if ( SanPhamDTO.getTenSanPham().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                || removeAccent(SanPhamDTO.getTenSanPham().toLowerCase()).contains(removeAccent(value.toLowerCase())))//Tìm kiếm theo chữ VN
             {
-                result.add(MonAnDTO);
+                result.add(SanPhamDTO);
             }
         });
 
             for (int i = result.size() - 1; i >= 0; i--)
             {
-                MonAnDTO monAn = result.get(i);
-                double donGia = monAn.getDonGia();
+                SanPhamDTO monAn = result.get(i);
+                double donGia = monAn.getGia();
                 int soLuong = monAn.getSoLuong();
                 Boolean donGiaKhongThoa = (donGiaTu != -1 && donGia < donGiaTu ) || (donGiaDen != -1 && donGia > donGiaDen);
                 Boolean soLuongKhongThoa = (soLuongTu != -1 && soLuong < soLuongTu ) || (soLuongDen != -1 && soLuong > soLuongDen );
@@ -320,130 +313,14 @@ public static boolean isGmail(String gmail)
             }
         return result;
     }
-    public static ArrayList<NguyenLieuDTO> searchNL(String value, double donGiaTu, double donGiaDen, int soLuongTu, int soLuongDen) { //có thay đổi
-        
-        // phương pháp tìm từ arraylist
-        ArrayList<NguyenLieuDTO> result = new ArrayList<>();
-
-        NguyenLieuBUS.dsnl.forEach((NguyenLieuDTO) -> {
-            if ( NguyenLieuDTO.getTenNguyenLieu().toLowerCase().contains(value.toLowerCase()) && NguyenLieuDTO.getTrangThai().equals("Hiện") 
-                || Tool.removeAccent(NguyenLieuDTO.getTenNguyenLieu().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NguyenLieuDTO.getTrangThai().equals("Hiện") )
-            {
-                result.add(NguyenLieuDTO);
-            }
-        });
-
-            for (int i = result.size() - 1; i >= 0; i--)
-            {
-                NguyenLieuDTO monAn = result.get(i);
-                double donGia = monAn.getDonGia();
-                int soLuong = monAn.getSoLuong();
-                Boolean donGiaKhongThoa = (donGiaTu != -1 && donGia < donGiaTu ) || (donGiaDen != -1 && donGia > donGiaDen);
-                Boolean soLuongKhongThoa = (soLuongTu != -1 && soLuong < soLuongTu ) || (soLuongDen != -1 && soLuong > soLuongDen );
-                if (donGiaKhongThoa || soLuongKhongThoa)
-                {
-                    result.remove(i);
-                }
-            }
-        return result;
-    }
-    public static ArrayList<CongThucDTO> searchCT(String value,String type) { 
-        // phương pháp tìm từ arraylist
-        ArrayList<CongThucDTO> result = new ArrayList<>();
-        if(type=="Mã công thức")
-        //Tìm theo tên
-        CongThucBUS.CT.forEach((CongThucDTO) -> {
-            if ( CongThucDTO.getIDCongThuc().toLowerCase().contains(value.toLowerCase()) && CongThucDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
-            {
-                result.add(CongThucDTO);
-            }
-        });
-        if(type=="Mã món ăn")
-        //Tìm theo tên
-        CongThucBUS.CT.forEach((CongThucDTO) -> {
-            if ( CongThucDTO.getIDMonAn().toLowerCase().contains(value.toLowerCase()) && CongThucDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
-            {
-                result.add(CongThucDTO);
-            }
-        });
-        if(type=="Mô tả công thức")
-        //Tìm theo tên
-        CongThucBUS.CT.forEach((CongThucDTO) -> {
-            if ( CongThucDTO.getMoTaCongThuc().toLowerCase().contains(value.toLowerCase()) && CongThucDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                    || removeAccent(CongThucDTO.getMoTaCongThuc().toLowerCase()).contains(removeAccent(value.toLowerCase())) && CongThucDTO.getTrangThai().equals("Hiện") )//Tìm kiếm theo chữ VN
-            {
-                result.add(CongThucDTO);
-            }
-        });
-            
-        return result;
-    }
-    public static ArrayList<KhuyenMaiDTO> searchKM(String value,String tuNgayBatDau, String denNgayKetThuc, double tuTienGiam, double denTienGiam, String type ) { 
-        // phương pháp tìm từ arraylist
-        ArrayList<KhuyenMaiDTO> result = new ArrayList<>();
-        if(type=="Mã khuyến mãi")
-        //Tìm theo tên
-        KhuyenMaiBUS.dskm.forEach((KhuyenMaiDTO) -> {
-            if ( KhuyenMaiDTO.getIDKhuyenMai().toLowerCase().contains(value.toLowerCase()) && KhuyenMaiDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
-            {
-                result.add(KhuyenMaiDTO);
-            }
-        });
-        if(type=="Tên chương trình")
-        //Tìm theo tên
-        KhuyenMaiBUS.dskm.forEach((KhuyenMaiDTO) -> {
-            if ( KhuyenMaiDTO.getTenChuongTrinh().toLowerCase().contains(value.toLowerCase()) && KhuyenMaiDTO.getTrangThai().equals("Hiện")//Tìm kiếm theo chuỗi thường
-                    ||removeAccent(KhuyenMaiDTO.getTenChuongTrinh().toLowerCase()).contains(removeAccent(value.toLowerCase())) && KhuyenMaiDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN
-            {
-                result.add(KhuyenMaiDTO);
-            }
-        });
-        if(type=="Nội dung")
-        //Tìm theo tên
-        KhuyenMaiBUS.dskm.forEach((KhuyenMaiDTO) -> {
-            if ( KhuyenMaiDTO.getNoiDungGiamGia().toLowerCase().contains(value.toLowerCase()) && KhuyenMaiDTO.getTrangThai().equals("Hiện")//Tìm kiếm theo chuỗi thường
-                    ||removeAccent(KhuyenMaiDTO.getNoiDungGiamGia().toLowerCase()).contains(removeAccent(value.toLowerCase())) && KhuyenMaiDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN
-            {
-                result.add(KhuyenMaiDTO);
-            }
-        });
-        
-        for (int i = result.size() - 1; i >= 0; i--)
-            {
-                KhuyenMaiDTO khuyenMai = result.get(i);
-                double tienGiam = khuyenMai.getTienGiam();
-                Boolean tienGiamKhongThoa = (tuTienGiam != -1 && tienGiam < tuTienGiam ) || (denTienGiam != -1 && tienGiam > denTienGiam);
-                if (tienGiamKhongThoa)
-                {
-                    result.remove(i);
-                }
-                
-            }
-        
-        for (int i = result.size() - 1; i >= 0; i--)
-            {
-                KhuyenMaiDTO khuyenMai = result.get(i);
-                LocalDate ngayBatDau = khuyenMai.getNgayBatDau();
-                LocalDate ngayKetThuc = khuyenMai.getNgayKetThuc();
-                Boolean ngayBatDauKhongThoa = (!(tuNgayBatDau).equals("") && ngayBatDau.isBefore(LocalDate.parse(tuNgayBatDau)));
-                Boolean ngayKetThucKhongThoa = (!(denNgayKetThuc).equals("") && ngayKetThuc.isAfter(LocalDate.parse(denNgayKetThuc)));        
-                if(ngayBatDauKhongThoa || ngayKetThucKhongThoa)
-                {
-                    result.remove(i);
-                }
-             
-            }
-
-            
-        return result;
-    }
+    
     public static ArrayList<KhachHangDTO> searchKH(String value,double tuTongChiTieu, double denTongChiTieu,String type) { 
         // phương pháp tìm từ arraylist
         ArrayList<KhachHangDTO> result = new ArrayList<>();
         if(type=="Mã khách hàng")
         //Tìm theo tên
         KhachHangBUS.dskh.forEach((KhachHangDTO) -> {
-            if ( KhachHangDTO.getIDKhachHang().toLowerCase().contains(value.toLowerCase()) && KhachHangDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( KhachHangDTO.getIDKhachHang().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(KhachHangDTO);
             }
@@ -451,8 +328,8 @@ public static boolean isGmail(String gmail)
         if(type=="Họ")
         //Tìm theo tên
         KhachHangBUS.dskh.forEach((KhachHangDTO) -> {
-            if ( KhachHangDTO.getHoKhachHang().toLowerCase().contains(value.toLowerCase()) && KhachHangDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(KhachHangDTO.getHoKhachHang().toLowerCase()).contains(removeAccent(value.toLowerCase())) && KhachHangDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( KhachHangDTO.getHoKhachHang().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                ||removeAccent(KhachHangDTO.getHoKhachHang().toLowerCase()).contains(removeAccent(value.toLowerCase())) )//Tìm kiếm theo chữ VN 
             {
                 result.add(KhachHangDTO);
             }
@@ -460,34 +337,17 @@ public static boolean isGmail(String gmail)
         if(type=="Tên")
         //Tìm theo tên
         KhachHangBUS.dskh.forEach((KhachHangDTO) -> {
-            if ( KhachHangDTO.getTenKhachHang().toLowerCase().contains(value.toLowerCase()) && KhachHangDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(KhachHangDTO.getTenKhachHang().toLowerCase()).contains(removeAccent(value.toLowerCase())) && KhachHangDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( KhachHangDTO.getTenKhachHang().toLowerCase().contains(value.toLowerCase()) //Tìm kiếm theo chuỗi thường
+                ||removeAccent(KhachHangDTO.getTenKhachHang().toLowerCase()).contains(removeAccent(value.toLowerCase())))//Tìm kiếm theo chữ VN 
             {
                 result.add(KhachHangDTO);
             }
         });
-        if(type=="Gmail")
-        //Tìm theo tên
-        KhachHangBUS.dskh.forEach((KhachHangDTO) -> {
-            if ( KhachHangDTO.getGmail().toLowerCase().contains(value.toLowerCase()) && KhachHangDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
-                
-            {
-                result.add(KhachHangDTO);
-            }
-        });
-        if(type=="Giới tính")
-        //Tìm theo tên
-        KhachHangBUS.dskh.forEach((KhachHangDTO) -> {
-            if ( KhachHangDTO.getGioiTinh().toLowerCase().contains(value.toLowerCase()) && KhachHangDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(KhachHangDTO.getGioiTinh().toLowerCase()).contains(removeAccent(value.toLowerCase())) && KhachHangDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
-            {
-                result.add(KhachHangDTO);
-            }
-        });
+        
         if(type=="SĐT")
         //Tìm theo tên
         KhachHangBUS.dskh.forEach((KhachHangDTO) -> {
-            if ( KhachHangDTO.getSoDienThoai().toLowerCase().contains(value.toLowerCase()) && KhachHangDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường                
+            if ( KhachHangDTO.getSoDienThoai().toLowerCase().contains(value.toLowerCase())) //Tìm kiếm theo chuỗi thường                
             {
                 result.add(KhachHangDTO);
             }
@@ -512,7 +372,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mã nhân viên")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( NhanVienDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase())) //Tìm kiếm theo chuỗi thường
             {
                 result.add(NhanVienDTO);
             }
@@ -520,8 +380,8 @@ public static boolean isGmail(String gmail)
         if(type=="Họ")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getHoNhanVien().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(NhanVienDTO.getHoNhanVien().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NhanVienDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( NhanVienDTO.getHoNhanVien().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                ||removeAccent(NhanVienDTO.getHoNhanVien().toLowerCase()).contains(removeAccent(value.toLowerCase())))//Tìm kiếm theo chữ VN 
             {
                 result.add(NhanVienDTO);
             }
@@ -529,8 +389,8 @@ public static boolean isGmail(String gmail)
         if(type=="Tên")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getTenNhanVien().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(NhanVienDTO.getTenNhanVien().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NhanVienDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( NhanVienDTO.getTenNhanVien().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                ||removeAccent(NhanVienDTO.getTenNhanVien().toLowerCase()).contains(removeAccent(value.toLowerCase())) )//Tìm kiếm theo chữ VN 
             {
                 result.add(NhanVienDTO);
             }
@@ -538,7 +398,7 @@ public static boolean isGmail(String gmail)
         if(type=="Gmail")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getGmail().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( NhanVienDTO.getGmail().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
                 
             {
                 result.add(NhanVienDTO);
@@ -547,8 +407,8 @@ public static boolean isGmail(String gmail)
         if(type=="Giới tính")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getGioiTinh().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(NhanVienDTO.getGioiTinh().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NhanVienDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( NhanVienDTO.getGioiTinh().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                ||removeAccent(NhanVienDTO.getGioiTinh().toLowerCase()).contains(removeAccent(value.toLowerCase())) )//Tìm kiếm theo chữ VN 
             {
                 result.add(NhanVienDTO);
             }
@@ -556,7 +416,7 @@ public static boolean isGmail(String gmail)
         if(type=="SĐT")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getSoDienThoai().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường                
+            if ( NhanVienDTO.getSoDienThoai().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường                
             {
                 result.add(NhanVienDTO);
             }
@@ -564,8 +424,8 @@ public static boolean isGmail(String gmail)
         if(type=="Chức vụ")
         //Tìm theo tên
         NhanVienBUS.dsnv.forEach((NhanVienDTO) -> {
-            if ( NhanVienDTO.getChucVu().toLowerCase().contains(value.toLowerCase()) && NhanVienDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                    || removeAccent(NhanVienDTO.getChucVu().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NhanVienDTO.getTrangThai().equals("Hiện"))
+            if ( NhanVienDTO.getChucVu().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                    || removeAccent(NhanVienDTO.getChucVu().toLowerCase()).contains(removeAccent(value.toLowerCase())) )
                 
             {
                 result.add(NhanVienDTO);
@@ -580,7 +440,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mã nhà cung cấp")
         //Tìm theo tên
         NhaCungCapBUS.dsncc.forEach((NhaCungCapDTO) -> {
-            if ( NhaCungCapDTO.getIDNhaCungCap().toLowerCase().contains(value.toLowerCase()) && NhaCungCapDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( NhaCungCapDTO.getIDNhaCungCap().toLowerCase().contains(value.toLowerCase())  ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(NhaCungCapDTO);
             }
@@ -588,8 +448,8 @@ public static boolean isGmail(String gmail)
         if(type=="Tên")
         //Tìm theo tên
         NhaCungCapBUS.dsncc.forEach((NhaCungCapDTO) -> {
-            if ( NhaCungCapDTO.getTenNhaCungCap().toLowerCase().contains(value.toLowerCase()) && NhaCungCapDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(NhaCungCapDTO.getTenNhaCungCap().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NhaCungCapDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( NhaCungCapDTO.getTenNhaCungCap().toLowerCase().contains(value.toLowerCase())   //Tìm kiếm theo chuỗi thường
+                ||removeAccent(NhaCungCapDTO.getTenNhaCungCap().toLowerCase()).contains(removeAccent(value.toLowerCase()))  )//Tìm kiếm theo chữ VN 
             {
                 result.add(NhaCungCapDTO);
             }
@@ -598,16 +458,7 @@ public static boolean isGmail(String gmail)
         if(type=="SĐT")
         //Tìm theo tên
         NhaCungCapBUS.dsncc.forEach((NhaCungCapDTO) -> {
-            if ( NhaCungCapDTO.getSoDienThoai().toLowerCase().contains(value.toLowerCase()) && NhaCungCapDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường                
-            {
-                result.add(NhaCungCapDTO);
-            }
-        });
-        if(type=="Gmail")
-        //Tìm theo tên
-        NhaCungCapBUS.dsncc.forEach((NhaCungCapDTO) -> {
-            if ( NhaCungCapDTO.getGmail().toLowerCase().contains(value.toLowerCase()) && NhaCungCapDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
-                
+            if ( NhaCungCapDTO.getSoDienThoai().toLowerCase().contains(value.toLowerCase())  ) //Tìm kiếm theo chuỗi thường                
             {
                 result.add(NhaCungCapDTO);
             }
@@ -615,13 +466,58 @@ public static boolean isGmail(String gmail)
         if(type=="Địa chỉ")
         //Tìm theo tên
         NhaCungCapBUS.dsncc.forEach((NhaCungCapDTO) -> {
-            if ( NhaCungCapDTO.getDiaChi().toLowerCase().contains(value.toLowerCase()) && NhaCungCapDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(NhaCungCapDTO.getDiaChi().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NhaCungCapDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( NhaCungCapDTO.getDiaChi().toLowerCase().contains(value.toLowerCase()) //Tìm kiếm theo chuỗi thường
+                ||removeAccent(NhaCungCapDTO.getDiaChi().toLowerCase()).contains(removeAccent(value.toLowerCase()))  )//Tìm kiếm theo chữ VN 
             {
                 result.add(NhaCungCapDTO);
             }
         });
            
+        return result;
+    }
+    public static ArrayList<ThuongHieuDTO> searchTH(String value,String type) { 
+        // phương pháp tìm từ arraylist
+        ArrayList<ThuongHieuDTO> result = new ArrayList<>();
+        if(type=="Mã thương hiệu")
+        //Tìm theo tên
+        ThuongHieuBUS.dsth.forEach((ThuongHieuDTO) -> {
+            if ( ThuongHieuDTO.getIDThuongHieu().toLowerCase().contains(value.toLowerCase())  ) //Tìm kiếm theo chuỗi thường
+            {
+                result.add(ThuongHieuDTO);
+            }
+        });
+        if(type=="Tên")
+        //Tìm theo tên
+        ThuongHieuBUS.dsth.forEach((ThuongHieuDTO) -> {
+            if ( ThuongHieuDTO.getTenThuongHieu().toLowerCase().contains(value.toLowerCase())   //Tìm kiếm theo chuỗi thường
+                ||removeAccent(ThuongHieuDTO.getTenThuongHieu().toLowerCase()).contains(removeAccent(value.toLowerCase()))  )//Tìm kiếm theo chữ VN 
+            {
+                result.add(ThuongHieuDTO);
+            }
+        });
+           
+        return result;
+    }
+    public static ArrayList<LoaiDayDTO> searchLD(String value,String type) { 
+        // phương pháp tìm từ arraylist
+        ArrayList<LoaiDayDTO> result = new ArrayList<>();
+        if(type=="Mã loại dây")
+        //Tìm theo tên
+        LoaiDayBUS.dsld.forEach((LoaiDayDTO) -> {
+            if ( LoaiDayDTO.getIDLoaiDay().toLowerCase().contains(value.toLowerCase())  ) //Tìm kiếm theo chuỗi thường
+            {
+                result.add(LoaiDayDTO);
+            }
+        });
+        if(type=="Tên")
+        //Tìm theo tên
+        LoaiDayBUS.dsld.forEach((LoaiDayDTO) -> {
+            if ( LoaiDayDTO.getTenLoaiDay().toLowerCase().contains(value.toLowerCase())   //Tìm kiếm theo chuỗi thường
+                ||removeAccent(LoaiDayDTO.getTenLoaiDay().toLowerCase()).contains(removeAccent(value.toLowerCase()))  )//Tìm kiếm theo chữ VN 
+            {
+                result.add(LoaiDayDTO);
+            }
+        });
         return result;
     }
     public static ArrayList<TaiKhoanDTO> searchTK(String value,String type) { 
@@ -630,7 +526,7 @@ public static boolean isGmail(String gmail)
         if(type=="Tài khoản")
         //Tìm theo tài khoản
         TaiKhoanBUS.dstk.forEach((TaiKhoanDTO) -> {
-            if ( TaiKhoanDTO.getTaiKhoan().toLowerCase().contains(value.toLowerCase()) && TaiKhoanDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( TaiKhoanDTO.getTaiKhoan().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(TaiKhoanDTO);
             }
@@ -638,7 +534,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mã nhân viên")
         //Tìm theo mã nhân viên
         TaiKhoanBUS.dstk.forEach((TaiKhoanDTO) -> {
-            if ( TaiKhoanDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) && TaiKhoanDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( TaiKhoanDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
                 
             {
                 result.add(TaiKhoanDTO);
@@ -648,7 +544,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mã quyền")
         //Tìm theo tên
         TaiKhoanBUS.dstk.forEach((TaiKhoanDTO) -> {
-            if ( TaiKhoanDTO.getIDPhanQuyen().toLowerCase().contains(value.toLowerCase()) && TaiKhoanDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường                
+            if ( TaiKhoanDTO.getIDPhanQuyen().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường                
             {
                 result.add(TaiKhoanDTO);
             }
@@ -656,7 +552,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mật khẩu")
         //Tìm theo mật khẩu
         TaiKhoanBUS.dstk.forEach((TaiKhoanDTO) -> {
-            if ( TaiKhoanDTO.getMatKhau().toLowerCase().contains(value.toLowerCase()) && TaiKhoanDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( TaiKhoanDTO.getMatKhau().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
                 
             {
                 result.add(TaiKhoanDTO);
@@ -672,7 +568,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mã quyền")
         //Tìm theo tên
         PhanQuyenBUS.dspq.forEach((PhanQuyenDTO) -> {
-            if ( PhanQuyenDTO.getIDPhanQuyen().toLowerCase().contains(value.toLowerCase()) && PhanQuyenDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( PhanQuyenDTO.getIDPhanQuyen().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(PhanQuyenDTO);
             }
@@ -680,8 +576,8 @@ public static boolean isGmail(String gmail)
         if(type=="Tên quyền")
         //Tìm theo tên
         PhanQuyenBUS.dspq.forEach((PhanQuyenDTO) -> {
-            if ( PhanQuyenDTO.getTenQuyen().toLowerCase().contains(value.toLowerCase()) && PhanQuyenDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                ||removeAccent(PhanQuyenDTO.getTenQuyen().toLowerCase()).contains(removeAccent(value.toLowerCase())) && PhanQuyenDTO.getTrangThai().equals("Hiện"))//Tìm kiếm theo chữ VN 
+            if ( PhanQuyenDTO.getTenQuyen().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                ||removeAccent(PhanQuyenDTO.getTenQuyen().toLowerCase()).contains(removeAccent(value.toLowerCase())) )//Tìm kiếm theo chữ VN 
             {
                 result.add(PhanQuyenDTO);
             }
@@ -690,7 +586,7 @@ public static boolean isGmail(String gmail)
         if(type=="Mô tả quyền")
         //Tìm theo tên
         PhanQuyenBUS.dspq.forEach((PhanQuyenDTO) -> {
-            if ( PhanQuyenDTO.getMoTaQuyen().toLowerCase().contains(value.toLowerCase()) && PhanQuyenDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường                
+            if ( PhanQuyenDTO.getMoTaQuyen().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường                
             {
                 result.add(PhanQuyenDTO);
             }
@@ -700,71 +596,50 @@ public static boolean isGmail(String gmail)
         return result;
             
     }
-    public static ArrayList<MonAnDTO> searchBH(String value) { 
+    public static ArrayList<SanPhamDTO> searchBH(String value) { 
         // phương pháp tìm từ arraylist
-        ArrayList<MonAnDTO> result = new ArrayList<>();       
+        ArrayList<SanPhamDTO> result = new ArrayList<>();       
         
         //Tìm theo tên
-        MonAnBUS.dsMonAn.forEach((MonAnDTO) -> {
-            if ( MonAnDTO.getTenMonAn().toLowerCase().contains(value.toLowerCase()) && MonAnDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                    || removeAccent(MonAnDTO.getTenMonAn().toLowerCase()).contains(removeAccent(value.toLowerCase())) && MonAnDTO.getTrangThai().equals("Hiện") )//Tìm kiếm theo chữ VN
+        SanPhamBUS.dsSanPham.forEach((SanPhamDTO) -> {
+            if ( SanPhamDTO.getTenSanPham().toLowerCase().contains(value.toLowerCase())  //Tìm kiếm theo chuỗi thường
+                    || removeAccent(SanPhamDTO.getTenSanPham().toLowerCase()).contains(removeAccent(value.toLowerCase()))  )//Tìm kiếm theo chữ VN
             {
-                result.add(MonAnDTO);
+                result.add(SanPhamDTO);
             }
         });
             
         return result;
     }
-    public static ArrayList<NguyenLieuDTO> searchNH(String value) { 
-        // phương pháp tìm từ arraylist
-        ArrayList<NguyenLieuDTO> result = new ArrayList<>();       
-        
-        //Tìm theo tên
-        NguyenLieuBUS.dsnl.forEach((NguyenLieuDTO) -> {
-            if ( NguyenLieuDTO.getTenNguyenLieu().toLowerCase().contains(value.toLowerCase()) && NguyenLieuDTO.getTrangThai().equals("Hiện") //Tìm kiếm theo chuỗi thường
-                    || removeAccent(NguyenLieuDTO.getTenNguyenLieu().toLowerCase()).contains(removeAccent(value.toLowerCase())) && NguyenLieuDTO.getTrangThai().equals("Hiện") )//Tìm kiếm theo chữ VN
-            {
-                result.add(NguyenLieuDTO);
-            }
-        });
-            
-        return result;
-    }
-    
     public static boolean docDB() throws Exception
     {
         try
         {
             ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS();
             ChiTietHoaDonNhapBUS cthdnBUS = new ChiTietHoaDonNhapBUS();
-            ChiTietNguyenLieuBUS ctnlBUS = new ChiTietNguyenLieuBUS();
-            CongThucBUS ctBUS = new CongThucBUS();
             HoaDonBUS hdBUS = new HoaDonBUS();
             HoaDonNhapBUS hdnBUS = new HoaDonNhapBUS();
             KhachHangBUS khBUS = new KhachHangBUS();
-            KhuyenMaiBUS kmBUS = new KhuyenMaiBUS();
-            MonAnBUS maBUS = new MonAnBUS();
-            NguyenLieuBUS nlBUS = new NguyenLieuBUS();
+            SanPhamBUS spBUS = new SanPhamBUS();
             NhaCungCapBUS nccBUS = new NhaCungCapBUS();
             NhanVienBUS nvBUS = new NhanVienBUS();
             PhanQuyenBUS pqBUS = new PhanQuyenBUS();
             TaiKhoanBUS tkBUS = new TaiKhoanBUS();
+            ThuongHieuBUS thBUS = new ThuongHieuBUS();
+            LoaiDayBUS ldBUS=new LoaiDayBUS();
+            spBUS.docDSSanPham();
+            thBUS.docTH();
+            ldBUS.docLD();
             cthdBUS.docCTHD();
             cthdnBUS.docCTHDN();
-            ctnlBUS.docCTNL();
-            ctBUS.docCT();
             hdBUS.docHD();
             hdnBUS.docHDN();
             khBUS.docDSKH();
-            kmBUS.docDSKM();
-            maBUS.docDSMonAn();
-            nlBUS.docDSNL();
             nccBUS.docDSNCC();
             nvBUS.docDSNV();
             pqBUS.docDSPQ();
             tkBUS.docDSTK(); 
         }catch(NullPointerException e){
-        e.printStackTrace();
         return false;
         }  
         return true;
@@ -817,7 +692,7 @@ public static boolean isGmail(String gmail)
         {
             //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
             HoaDonNhapBUS.dshdn.forEach((HoaDonNhapDTO) -> {
-            if ( HoaDonNhapDTO.getIDHoaDonNhap().toLowerCase().contains(value.toLowerCase()) && HoaDonNhapDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( HoaDonNhapDTO.getIDHoaDonNhap().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(HoaDonNhapDTO);
             }
@@ -827,7 +702,7 @@ public static boolean isGmail(String gmail)
         {
             //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
             HoaDonNhapBUS.dshdn.forEach((HoaDonNhapDTO) -> {
-            if ( HoaDonNhapDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) && HoaDonNhapDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( HoaDonNhapDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(HoaDonNhapDTO);
             }
@@ -837,7 +712,7 @@ public static boolean isGmail(String gmail)
         {
             //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
             HoaDonNhapBUS.dshdn.forEach((HoaDonNhapDTO) -> {
-            if ( HoaDonNhapDTO.getIDNhaCungCap().toLowerCase().contains(value.toLowerCase()) && HoaDonNhapDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( HoaDonNhapDTO.getIDNhaCungCap().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(HoaDonNhapDTO);
             }
@@ -847,8 +722,8 @@ public static boolean isGmail(String gmail)
         
         for (int i = result.size() - 1; i >= 0; i--)
             {
-                HoaDonNhapDTO hoaDonNhap = result.get(i);
-                double tongTien = hoaDonNhap.getTongTien();
+                HoaDonNhapDTO hoaDonNhap = result.get(i);  
+                double tongTien = hoaDonNhap.getThanhTien();
                 Boolean donGiaKhongThoa = (tuTongTien != -1 && tongTien < tuTongTien ) || (denTongTien != -1 && tongTien > denTongTien);
                 if (donGiaKhongThoa)
                 {
@@ -869,9 +744,6 @@ public static boolean isGmail(String gmail)
                 }
              
             }
-        
-        
-        
         return result;
     }
     
@@ -882,7 +754,7 @@ public static boolean isGmail(String gmail)
         {
             //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
             HoaDonBUS.HD.forEach((HoaDonDTO) -> {
-            if ( HoaDonDTO.getIDHoaDon().toLowerCase().contains(value.toLowerCase()) && HoaDonDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( HoaDonDTO.getIDHoaDon().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(HoaDonDTO);
             }
@@ -892,7 +764,7 @@ public static boolean isGmail(String gmail)
         {
             //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
             HoaDonBUS.HD.forEach((HoaDonDTO) -> {
-            if ( HoaDonDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) && HoaDonDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( HoaDonDTO.getIDNhanVien().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(HoaDonDTO);
             }
@@ -902,27 +774,18 @@ public static boolean isGmail(String gmail)
         {
             //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
             HoaDonBUS.HD.forEach((HoaDonDTO) -> {
-            if ( HoaDonDTO.getIDKhachHang().toLowerCase().contains(value.toLowerCase()) && HoaDonDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
-            {
-                result.add(HoaDonDTO);
-            }
-            });
-        }
-        if(type.equals("Mã khuyến mãi"))
-        {
-            //duyệt xem mã giống mã nhập vào thì thêm vào arraylist result
-            HoaDonBUS.HD.forEach((HoaDonDTO) -> {
-            if ( HoaDonDTO.getIDKhuyenMai().toLowerCase().contains(value.toLowerCase()) && HoaDonDTO.getTrangThai().equals("Hiện")) //Tìm kiếm theo chuỗi thường
+            if ( HoaDonDTO.getIDKhachHang().toLowerCase().contains(value.toLowerCase()) ) //Tìm kiếm theo chuỗi thường
             {
                 result.add(HoaDonDTO);
             }
             });
         }
         
+        
         for (int i = result.size() - 1; i >= 0; i--)
             {
                 HoaDonDTO hoaDon = result.get(i);
-                double tongTien = hoaDon.getTongTien();
+                double tongTien = hoaDon.getThanhTien();
                 Boolean donGiaKhongThoa = (tuTongTien != -1 && tongTien < tuTongTien ) || (denTongTien != -1 && tongTien > denTongTien);
                 if (donGiaKhongThoa)
                 {
@@ -934,7 +797,7 @@ public static boolean isGmail(String gmail)
         for (int i = result.size() - 1; i >= 0; i--)
             {
                 HoaDonDTO hoaDon = result.get(i);
-                LocalDate ngayLap = hoaDon.getNgayLap();
+                LocalDate ngayLap = hoaDon.getNgayBan();
                 Boolean ngayNhapKhongThoa = (!(tuNgayLap).equals("") && ngayLap.isBefore(LocalDate.parse(tuNgayLap))) 
                         || (!(denNgayLap).equals("") && ngayLap.isAfter(LocalDate.parse(denNgayLap)));
                 if(ngayNhapKhongThoa)
@@ -950,14 +813,4 @@ public static boolean isGmail(String gmail)
     }
     
 }
-
-
-
-
-
-
-
-
-
-
 

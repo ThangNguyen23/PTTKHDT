@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package DAO;
 
 //import Connect.ConnectDB;
@@ -22,7 +18,7 @@ public class TaiKhoanDAO {
     public ArrayList docDSTK() throws Exception {
         ArrayList<TaiKhoanDTO> dstk = new ArrayList<>() ;
         try {
-            String qry = "SELECT * FROM taikhoannhanvien";
+            String qry = "SELECT * FROM taikhoankh";
             ResultSet rs = connection.excuteQuery(qry);  
             while (rs.next()) {
                     TaiKhoanDTO  tk = new TaiKhoanDTO();
@@ -30,7 +26,6 @@ public class TaiKhoanDAO {
                     tk.setIDNhanVien(rs.getString("IDNhanVien"));
                     tk.setIDPhanQuyen(rs.getString("IDPhanQuyen"));
                     tk.setMatKhau(rs.getString("MatKhau"));
-                    tk.setTrangThai(rs.getString("TrangThai"));
                     dstk.add(tk);
                 }
             }
@@ -41,12 +36,11 @@ public class TaiKhoanDAO {
     }
     public void them(TaiKhoanDTO tk ) {
         try{
-            String qry ="INSERT INTO taikhoannhanvien values (";
+            String qry ="INSERT INTO taikhoankh values (";
             qry = qry + "'" + tk.getTaiKhoan()+ "'";
+            qry = qry + "," + "'" + tk.getMatKhau()+ "'";
             qry = qry + "," + "'" + tk.getIDNhanVien()+ "'";
             qry = qry + "," + "'" + tk.getIDPhanQuyen()+ "'";
-            qry = qry + "," + "'" + tk.getMatKhau()+ "'";
-            qry = qry + "," + "'" + tk.getTrangThai()+ "'";
             qry = qry + ")";
             connection.getStatement();
             connection.ExecuteUpdate(qry);  
@@ -59,10 +53,10 @@ public class TaiKhoanDAO {
     
     public void sua(TaiKhoanDTO tk){
         try{
-             String qry="Update taikhoannhanvien Set ";
-                    qry = qry + "IDNhanVien= '"+tk.getIDNhanVien()+"'";
+             String qry="Update taikhoankh Set ";
+                    qry = qry + "MatKhau= '"+tk.getMatKhau()+"'";
+                    qry = qry + ",IDNhanVien= '"+tk.getIDNhanVien()+"'";
                     qry = qry + ",IDPhanQuyen= '"+tk.getIDPhanQuyen()+"'";
-                    qry = qry + ",MatKhau= '"+tk.getMatKhau()+"'";
                     qry = qry + " "+" WHERE TaiKhoan='"+tk.getTaiKhoan()+"'";
                     connection.getStatement();
                     connection.ExecuteUpdate(qry);
@@ -75,9 +69,8 @@ public class TaiKhoanDAO {
     
     public void xoa(String  TaiKhoan){
         try{
-           String qry = "Update taikhoannhanvien Set ";
-            qry = qry + "TrangThai=" + "'" + "Ẩn" + "'";
-            qry = qry + " " + "where TaiKhoan='" + TaiKhoan + "'";
+            String qry = "DELETE FROM taikhoankh";
+            qry = qry + " " + "WHERE TaiKhoan = '" + TaiKhoan+ "'";
             connection.getStatement();
             connection.ExecuteUpdate(qry);
             System.out.println(qry);
@@ -86,18 +79,7 @@ public class TaiKhoanDAO {
             
         }
     }
-    public void xoa(TaiKhoanDTO tk) {
-        try {
-            String qry = "Update taikhoannhanvien Set ";
-            qry = qry + "TrangThai=" + "'" + tk.getTrangThai() + "'";
-            qry = qry + " " + "where TaiKhoan='" + tk.getTaiKhoan() + "'";
-            connection.getStatement();
-            connection.ExecuteUpdate(qry);
-            System.out.println(qry);
-            connection.closeConnect();
-        } catch (Exception e) {
-        }
-    }
+    
 }
 
 

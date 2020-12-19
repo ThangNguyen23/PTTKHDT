@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Đã sửa
 package Report;
 
 import BUS.ChiTietHoaDonBUS;
@@ -10,9 +6,7 @@ import BUS.ChiTietHoaDonNhapBUS;
 import BUS.HoaDonBUS;
 import BUS.HoaDonNhapBUS;
 import BUS.KhachHangBUS;
-import BUS.KhuyenMaiBUS;
-import BUS.MonAnBUS;
-import BUS.NguyenLieuBUS;
+import BUS.SanPhamBUS;
 import BUS.NhaCungCapBUS;
 import BUS.NhanVienBUS;
 import DTO.ChiTietHoaDonDTO;
@@ -150,8 +144,7 @@ public class PDF {
             HoaDonBUS hdBUS = new HoaDonBUS();
             KhachHangBUS khBUS = new KhachHangBUS();
             NhanVienBUS nvBUS = new NhanVienBUS();
-            KhuyenMaiBUS kmBUS = new KhuyenMaiBUS();
-            MonAnBUS maBUS = new MonAnBUS();
+            SanPhamBUS maBUS = new SanPhamBUS();
             ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS();
 
             HoaDonDTO hd = hdBUS.getHoaDonDTO(mahd);
@@ -163,7 +156,7 @@ public class PDF {
             para1.setFont(fontData);
             para1.add(String.valueOf("Khách hàng: " + khBUS.getKhachHangDTO(hd.getIDKhachHang()).getTenKhachHang() + "  -  " + hd.getIDKhachHang()));
             para1.add(glue);
-            para1.add("Ngày lập: " + String.valueOf(hd.getNgayLap()));
+            para1.add("Ngày bán: " + String.valueOf(hd.getNgayBan()));
 
             Paragraph para2 = new Paragraph();
             para2.setPaddingTop(30);
@@ -171,20 +164,20 @@ public class PDF {
             para2.add(String.valueOf("Nhân viên: " + nvBUS.getNhanVienDTO(hd.getIDNhanVien()).getTenNhanVien()+ "  -  " + hd.getIDNhanVien()));
             para2.add(glue);
 
-            Paragraph paraKhuyenMai = new Paragraph();
-            paraKhuyenMai.setPaddingTop(30);
-            paraKhuyenMai.setFont(fontData);
-            paraKhuyenMai.add("Khuyến mãi: " + kmBUS.getKhuyenMaiDTO(hd.getIDKhuyenMai()).getTenChuongTrinh());
+//            Paragraph paraKhuyenMai = new Paragraph();
+//            paraKhuyenMai.setPaddingTop(30);
+//            paraKhuyenMai.setFont(fontData);
+//            paraKhuyenMai.add("Khuyến mãi: " + kmBUS.getKhuyenMaiDTO(hd.getIDKhuyenMai()).getTenChuongTrinh());
 
             document.add(paraMaHoaDon);
             document.add(para1);
             document.add(para2);
-            document.add(paraKhuyenMai);
+//            document.add(paraKhuyenMai);
             document.add(Chunk.NEWLINE);//add hàng trống để tạo khoảng cách
 
             //Tạo table cho các chi tiết của hóa đơn
             PdfPTable pdfTable = new PdfPTable(5);
-            double tongKhuyenMai = 0;
+//            double tongKhuyenMai = 0;
             float tongThanhTien = 0;
 
             //Set headers cho table chi tiết
@@ -201,8 +194,8 @@ public class PDF {
             //Truyền thông tin chi tiết vào table
             for (ChiTietHoaDonDTO cthd : cthdBUS.getAllChiTiet(mahd)) {
 
-                String ma = cthd.getIDMonAn();
-                String ten = maBUS.getMonAnDTO(cthd.getIDMonAn()).getTenMonAn();
+                String ma = cthd.getIDSanPham();
+                String ten = maBUS.getSanPhamDTO(cthd.getIDSanPham()).getTenSanPham();
                 String gia = PriceFormatter.format(cthd.getDonGia());
                 String soluong = String.valueOf(cthd.getSoLuong());
                 String thanhtien = PriceFormatter.format(cthd.getDonGia() * cthd.getSoLuong());
@@ -219,14 +212,14 @@ public class PDF {
             document.add(pdfTable);
             document.add(Chunk.NEWLINE);
 
-            tongKhuyenMai = hd.getTongTien() - tongThanhTien;
+//            tongKhuyenMai = hd.getThanhTien() - tongThanhTien;
             Paragraph paraTongThanhTien = new Paragraph(new Phrase("Tổng thành tiền: " + PriceFormatter.format(tongThanhTien), fontData));
             paraTongThanhTien.setIndentationLeft(300);
             document.add(paraTongThanhTien);
-            Paragraph paraTongKhuyenMai = new Paragraph(new Phrase("Tổng khuyến mãi: " + PriceFormatter.format1(tongKhuyenMai), fontData));
-            paraTongKhuyenMai.setIndentationLeft(300);
-            document.add(paraTongKhuyenMai);
-            Paragraph paraTongThanhToan = new Paragraph(new Phrase("Tổng thanh toán: " + PriceFormatter.format1(hd.getTongTien()), fontData));
+//            Paragraph paraTongKhuyenMai = new Paragraph(new Phrase("Tổng khuyến mãi: " + PriceFormatter.format1(tongKhuyenMai), fontData));
+//            paraTongKhuyenMai.setIndentationLeft(300);
+//            document.add(paraTongKhuyenMai);
+            Paragraph paraTongThanhToan = new Paragraph(new Phrase("Tổng thanh toán: " + PriceFormatter.format1(hd.getThanhTien()), fontData));
             paraTongThanhToan.setIndentationLeft(300);
             document.add(paraTongThanhToan);
             document.close();
@@ -255,7 +248,7 @@ public class PDF {
             HoaDonNhapBUS hdnBUS = new HoaDonNhapBUS();
             NhaCungCapBUS nccBUS = new NhaCungCapBUS();
             NhanVienBUS nvBUS = new NhanVienBUS();
-            NguyenLieuBUS nlBUS = new NguyenLieuBUS();
+            SanPhamBUS spBUS = new SanPhamBUS();
             ChiTietHoaDonNhapBUS cthdnBUS = new ChiTietHoaDonNhapBUS();
 
             HoaDonNhapDTO hdn = hdnBUS.getHoaDonNhapDTO(mahdn);
@@ -287,8 +280,8 @@ public class PDF {
             float tongThanhTien = 0;
 
             //Set headers cho table chi tiet
-            pdfTable.addCell(new PdfPCell(new Phrase("Mã nguyên liệu", fontHeader)));
-            pdfTable.addCell(new PdfPCell(new Phrase("Tên nguyên liệu", fontHeader)));
+            pdfTable.addCell(new PdfPCell(new Phrase("Mã sản phẩm", fontHeader)));
+            pdfTable.addCell(new PdfPCell(new Phrase("Tên sản phẩm", fontHeader)));
             pdfTable.addCell(new PdfPCell(new Phrase("Giá nhập", fontHeader)));
             pdfTable.addCell(new PdfPCell(new Phrase("Số lượng", fontHeader)));
             pdfTable.addCell(new PdfPCell(new Phrase("Tổng tiền", fontHeader)));
@@ -300,8 +293,8 @@ public class PDF {
             //Truyen thong tin tung chi tiet vao table
             for (ChiTietHoaDonNhapDTO cthdn : cthdnBUS.getAllChiTiet(mahdn)) {
 
-                String ma = cthdn.getIDNguyenLieu();
-                String ten = nlBUS.getNguyenLieuDTO(cthdn.getIDNguyenLieu()).getTenNguyenLieu();
+                String ma = cthdn.getIDSanPham();
+                String ten = spBUS.getSanPhamDTO(cthdn.getIDSanPham()).getTenSanPham();
                 String gia = PriceFormatter.format(cthdn.getGiaNhap());
                 String soluong = String.valueOf(cthdn.getSoLuong());
                 String thanhtien = PriceFormatter.format(cthdn.getGiaNhap() * cthdn.getSoLuong());
@@ -323,7 +316,7 @@ public class PDF {
             paraTongThanhTien.setIndentationLeft(300);
             document.add(paraTongThanhTien);
 
-            Paragraph paraTongThanhToan = new Paragraph(new Phrase("Tổng thanh toán: " + PriceFormatter.format1(hdn.getTongTien()), fontData));
+            Paragraph paraTongThanhToan = new Paragraph(new Phrase("Tổng thanh toán: " + PriceFormatter.format1(hdn.getThanhTien()), fontData));
             paraTongThanhToan.setIndentationLeft(300);
             document.add(paraTongThanhToan);
             document.close();
